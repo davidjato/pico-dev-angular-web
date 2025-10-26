@@ -1,0 +1,25 @@
+<header class="main-header">
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#why-us">Why Us</a></li>
+      <li><a href="#coming-soon">Coming Soon</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="lang-switcher">
+      <button (click)="changeLang('es')">ES</button>
+      <button (click)="changeLang('en')">EN</button>
+      <button (click)="changeLang('fr')">FR</button>
+    </div>
+  </nav>
+</header>
+<section class="main-section">
+  <h1>{{ 'MAIN.TITLE' | translate }}</h1>
+  <p>{{ 'MAIN.WELCOME' | translate }}</p>
+</section>
+<feature-home id="home"></feature-home>
+<feature-about id="about"></feature-about>
+<feature-why-us id="why-us"></feature-why-us>
+<feature-coming-soon id="coming-soon"></feature-coming-soon>
+<feature-contact id="contact"></feature-contact>

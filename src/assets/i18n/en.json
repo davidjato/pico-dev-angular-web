@@ -1,0 +1,52 @@
+{
+  "MAIN": {
+    "TITLE": "Main Page",
+    "WELCOME": "Welcome to the Angular 20 app"
+  },
+  "HOME": {
+    "TITLE": "Home",
+    "DESCRIPTION": "Welcome to the home section."
+  },
+  "ABOUT": {
+    "TITLE": "About",
+    "MENU": {
+      "CONCEPT": "Concept",
+      "MISSION": "Mission",
+      "VISION": "Vision",
+      "MANIFIESTO": "Manifiesto"
+    },
+    "TEXT": {
+      "CONCEPT": "Our concept is to blend technology and creativity for a better world.",
+      "MISSION": "Our mission is to empower people through innovative digital solutions.",
+      "VISION": "We envision a future where technology is accessible and inspiring for all.",
+      "MANIFIESTO": "We believe in openness, collaboration, and positive impact."
+    },
+    "DESCRIPTION": "This is the about section."
+  },
+  "WHYUS": {
+    "TITLE": "Why Us",
+    "MENU": {
+      "CELEBRATE": "Celebrate",
+      "AWARENESS": "Awareness",
+      "COMMUNITY": "Community",
+      "IMPACT": "Impact"
+    },
+    "TEXT": {
+      "CELEBRATE": "We celebrate every achievement, big or small, as a community.",
+      "AWARENESS": "We foster awareness and learning for continuous growth.",
+      "COMMUNITY": "Our community is open, inclusive, and supportive.",
+      "IMPACT": "We strive to make a positive impact in everything we do."
+    },
+    "DESCRIPTION": "Reasons to choose us."
+  },
+  "COMINGSOON": {
+    "TITLE": "Coming Soon",
+    "DESCRIPTION": "This section will be available soon.",
+    "PAUSE": "Pause",
+    "RESUME": "Resume"
+  },
+  "CONTACT": {
+    "TITLE": "Contact",
+    "DESCRIPTION": "Get in touch with us."
+  }
+}

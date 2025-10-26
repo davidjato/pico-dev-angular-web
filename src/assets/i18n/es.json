@@ -1,0 +1,52 @@
+{
+  "MAIN": {
+    "TITLE": "Página principal",
+    "WELCOME": "Bienvenido a la aplicación Angular 20"
+  },
+  "HOME": {
+    "TITLE": "Inicio",
+    "DESCRIPTION": "Bienvenido a la sección de inicio."
+  },
+  "ABOUT": {
+    "TITLE": "Acerca de",
+    "MENU": {
+      "CONCEPT": "Concepto",
+      "MISSION": "Misión",
+      "VISION": "Visión",
+      "MANIFIESTO": "Manifiesto"
+    },
+    "TEXT": {
+      "CONCEPT": "Nuestro concepto es fusionar tecnología y creatividad para un mundo mejor.",
+      "MISSION": "Nuestra misión es empoderar a las personas con soluciones digitales innovadoras.",
+      "VISION": "Imaginamos un futuro donde la tecnología sea accesible e inspiradora para todos.",
+      "MANIFIESTO": "Creemos en la apertura, la colaboración y el impacto positivo."
+    },
+    "DESCRIPTION": "Esta es la sección sobre nosotros."
+  },
+  "WHYUS": {
+    "TITLE": "Por qué elegirnos",
+    "MENU": {
+      "CELEBRATE": "Celebrar",
+      "AWARENESS": "Conciencia",
+      "COMMUNITY": "Comunidad",
+      "IMPACT": "Impacto"
+    },
+    "TEXT": {
+      "CELEBRATE": "Celebramos cada logro, grande o pequeño, como comunidad.",
+      "AWARENESS": "Fomentamos la conciencia y el aprendizaje para el crecimiento continuo.",
+      "COMMUNITY": "Nuestra comunidad es abierta, inclusiva y solidaria.",
+      "IMPACT": "Buscamos generar un impacto positivo en todo lo que hacemos."
+    },
+    "DESCRIPTION": "Razones para elegirnos."
+  },
+  "COMINGSOON": {
+    "TITLE": "Próximamente",
+    "DESCRIPTION": "Esta sección estará disponible pronto.",
+    "PAUSE": "Pausar",
+    "RESUME": "Reanudar"
+  },
+  "CONTACT": {
+    "TITLE": "Contacto",
+    "DESCRIPTION": "Ponte en contacto con nosotros."
+  }
+}

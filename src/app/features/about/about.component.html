@@ -1,0 +1,60 @@
+<section class="feature-section">
+    <canvas #threeCanvas class="three-bg"></canvas>
+    <div class="feature-content about-flex">
+        <div class="about-menu">
+            <button *ngFor="let opt of menuOptions" [class.active]="selectedOption === opt.key"
+                (click)="selectOption(opt.key)">
+                {{ opt.label | translate }}
+            </button>
+        </div>
+        <div class="about-text">
+            <h2>{{ 'ABOUT.TITLE' | translate }}</h2>
+            <p>{{ selectedTextKey | translate }}</p>
+        </div>
+    </div>
+    <section class="feature-section">
+        <section class="feature-section">
+            <canvas #threeCanvas class="three-bg"></canvas>
+            <div class="feature-content about-flex">
+                <div class="about-menu">
+                    <button *ngFor="let opt of menuOptions" [class.active]="selectedOption === opt.key"
+                        (click)="selectOption(opt.key)">
+                        {{ opt.label | translate }}
+                    </button>
+                </div>
+                <div class="about-text">
+                    <h2>{{ 'ABOUT.TITLE' | translate }}</h2>
+                    <p>{{ selectedTextKey | translate }}</p>
+                </div>
+            </div>
+        </section>
+        <canvas #threeCanvas class="three-bg"></canvas>
+        <div class="feature-content about-flex">
+            <div class="about-menu">
+                <button *ngFor="let opt of menuOptions" [class.active]="selectedOption === opt.key"
+                    (click)="selectOption(opt.key)">
+                    {{ opt.label | translate }}
+                </button>
+            </div>
+            <div class="about-text">
+                <h2>{{ 'ABOUT.TITLE' | translate }}</h2>
+                <p>{{ selectedTextKey | translate }}</p>
+            </div>
+        </div>
+    </section>
+</section>
+<section class="feature-section">
+    <canvas #threeCanvas class="three-bg"></canvas>
+    <div class="feature-content about-flex">
+        <div class="about-menu">
+            <button *ngFor="let opt of menuOptions" [class.active]="selectedOption === opt.key"
+                (click)="selectOption(opt.key)">
+                {{ opt.label | translate }}
+            </button>
+        </div>
+        <div class="about-text">
+            <h2>{{ 'ABOUT.TITLE' | translate }}</h2>
+            <p>{{ selectedTextKey | translate }}</p>
+        </div>
+    </div>
+</section>

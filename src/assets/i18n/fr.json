@@ -1,0 +1,52 @@
+{
+  "MAIN": {
+    "TITLE": "Page principale",
+    "WELCOME": "Bienvenue dans l'application Angular 20"
+  },
+  "HOME": {
+    "TITLE": "Accueil",
+    "DESCRIPTION": "Bienvenue dans la section d'accueil."
+  },
+  "ABOUT": {
+    "TITLE": "À propos",
+    "MENU": {
+      "CONCEPT": "Concept",
+      "MISSION": "Mission",
+      "VISION": "Vision",
+      "MANIFIESTO": "Manifeste"
+    },
+    "TEXT": {
+      "CONCEPT": "Notre concept est de mêler technologie et créativité pour un monde meilleur.",
+      "MISSION": "Notre mission est de donner du pouvoir aux gens grâce à des solutions numériques innovantes.",
+      "VISION": "Nous imaginons un avenir où la technologie est accessible et inspirante pour tous.",
+      "MANIFIESTO": "Nous croyons en l'ouverture, la collaboration et l'impact positif."
+    },
+    "DESCRIPTION": "Ceci est la section à propos de nous."
+  },
+  "WHYUS": {
+    "TITLE": "Pourquoi nous choisir",
+    "MENU": {
+      "CELEBRATE": "Célébrer",
+      "AWARENESS": "Conscience",
+      "COMMUNITY": "Communauté",
+      "IMPACT": "Impact"
+    },
+    "TEXT": {
+      "CELEBRATE": "Nous célébrons chaque réussite, grande ou petite, en tant que communauté.",
+      "AWARENESS": "Nous favorisons la conscience et l'apprentissage pour une croissance continue.",
+      "COMMUNITY": "Notre communauté est ouverte, inclusive et solidaire.",
+      "IMPACT": "Nous nous efforçons d'avoir un impact positif dans tout ce que nous faisons."
+    },
+    "DESCRIPTION": "Raisons de nous choisir."
+  },
+  "COMINGSOON": {
+    "TITLE": "Bientôt disponible",
+    "DESCRIPTION": "Cette section sera bientôt disponible.",
+    "PAUSE": "Pause",
+    "RESUME": "Reprendre"
+  },
+  "CONTACT": {
+    "TITLE": "Contact",
+    "DESCRIPTION": "Contactez-nous."
+  }
+}
