@@ -23,6 +23,37 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
+  .controls-panel {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 10;
+    background: rgba(10, 20, 30, 0.85);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 12px 0 #000a;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    label {
+      color: #fff;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      input[type="range"] {
+        margin: 0 0.5rem;
+        accent-color: #ff7a00;
+      }
+      span {
+        min-width: 2.5em;
+        text-align: right;
+        font-family: 'Roboto', sans-serif;
+        color: #ff7a00;
+        font-weight: bold;
+      }
+    }
+  }
 }
 
 .three-bg {

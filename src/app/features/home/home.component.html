@@ -1,8 +1,100 @@
-<section class="feature-section home-section">
-  <app-logo-neon></app-logo-neon>
-  <div class="feature-content">
-    <h2 class="home-title">Neón ON/OFF con Three.js</h2>
-    <p>Bienvenido a la experiencia 3D de neón interactivo en Angular 20.</p>
-    <button class="home-btn" (click)="scrollToNext()">Descubre más</button>
+<section id="home">
+  <!-- Contenedor del canvas -->
+  <div class="canvas-wrapper" #rendererContainer></div>
+
+  <!-- Panel de controles visuales -->
+  <div class="ui-panel">
+    <label>
+      Bloom fuerza
+      <input type="range" min="0" max="2" step="0.01" [(ngModel)]="controls.bloomStrength" (input)="onControlsChange()">
+      <span>{{ controls.bloomStrength }}</span>
+    </label>
+    <label>
+      Bloom radio
+      <input type="range" min="0" max="1" step="0.01" [(ngModel)]="controls.bloomRadius" (input)="onControlsChange()">
+      <span>{{ controls.bloomRadius }}</span>
+    </label>
+    <label>
+      Bloom threshold
+      <input type="range" min="0" max="1" step="0.01" [(ngModel)]="controls.bloomThreshold"
+        (input)="onControlsChange()">
+      <span>{{ controls.bloomThreshold }}</span>
+    </label>
+    <label>
+      Exposición
+      <input type="range" min="0.5" max="3" step="0.01" [(ngModel)]="controls.exposure" (input)="onControlsChange()">
+      <span>{{ controls.exposure }}</span>
+    </label>
+    <label>
+      Color neón
+      <input type="color" [(ngModel)]="neonColorHex" (input)="onControlsChange()">
+      <span>{{ neonColorHex }}</span>
+    </label>
+
+    <hr>
+    <label>
+      Cámara X
+      <input type="range" min="-10" max="10" step="0.01" [(ngModel)]="controls.cameraX" (input)="onControlsChange()">
+      <span>{{ controls.cameraX }}</span>
+    </label>
+    <label>
+      Cámara Y
+      <input type="range" min="-10" max="10" step="0.01" [(ngModel)]="controls.cameraY" (input)="onControlsChange()">
+      <span>{{ controls.cameraY }}</span>
+    </label>
+    <label>
+      Cámara Z
+      <input type="range" min="0" max="20" step="0.01" [(ngModel)]="controls.cameraZ" (input)="onControlsChange()">
+      <span>{{ controls.cameraZ }}</span>
+    </label>
+    <label>
+      Rotación cámara X
+      <input type="range" min="-90" max="90" step="1" [(ngModel)]="controls.cameraRotX" (input)="onControlsChange()">
+      <span>{{ controls.cameraRotX }}°</span>
+    </label>
+    <label>
+      Rotación cámara Y
+      <input type="range" min="-180" max="180" step="1" [(ngModel)]="controls.cameraRotY" (input)="onControlsChange()">
+      <span>{{ controls.cameraRotY }}°</span>
+    </label>
+    <label>
+      Rotación cámara Z
+      <input type="range" min="-180" max="180" step="1" [(ngModel)]="controls.cameraRotZ" (input)="onControlsChange()">
+      <span>{{ controls.cameraRotZ }}°</span>
+    </label>
+
+    <hr>
+    <label>
+      Cargar GLB
+      <input type="file" accept=".glb,.gltf" (change)="onModelFileSelected($event)">
+    </label>
+    <label>
+      Rotación modelo X
+      <input type="range" min="-180" max="180" step="1" [(ngModel)]="controls.rotationX" (input)="onControlsChange()">
+      <span>{{ controls.rotationX }}°</span>
+    </label>
+    <label>
+      Rotación modelo Y
+      <input type="range" min="-180" max="180" step="1" [(ngModel)]="controls.rotationY" (input)="onControlsChange()">
+      <span>{{ controls.rotationY }}°</span>
+    </label>
+    <label>
+      Rotación modelo Z
+      <input type="range" min="-180" max="180" step="1" [(ngModel)]="controls.rotationZ" (input)="onControlsChange()">
+      <span>{{ controls.rotationZ }}°</span>
+    </label>
+  </div>
+  <div class="home-intro">
+    <h1 class="home-intro-title">
+      MORE THAN A <span>PARTY</span><br />
+      A <span class="strong">COLLECTIVE</span>&nbsp;
+      <span>COMMUNITY</span>
+    </h1>
+    <p class="home-intro-subtitle">
+      Real culture is not what you consume, but what you help build
+    </p>
+    <button class="home-intro-cta">
+      Letz Picollect
+    </button>
   </div>
 </section>

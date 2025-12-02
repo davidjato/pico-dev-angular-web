@@ -1,24 +1,319 @@
-.feature-section {
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,400,700&display=swap');
+
+body,
+html {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+#home {
+  position: relative;
   width: 100%;
   height: 100vh;
-  position: relative;
+
   overflow: hidden;
+  color: #e0fafa;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  .canvas-wrapper {
+    position: absolute;
+    inset: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+  }
+
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: transparent;
+  }
+
+  .ui-panel {
+    pointer-events: none;
+    visibility: hidden;
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+
+    .file-label {
+      position: relative;
+      overflow: hidden;
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+
+      span {
+        pointer-events: none;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      input[type='file'] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, #00ffff, #6e61ff);
+      color: #020617;
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0 18px rgba(110, 97, 255, 0.9);
+      }
+    }
+
+    button.blinking {
+      animation: pulse 0.8s infinite alternate;
+    }
+  }
+
+  .controls-panel {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    width: 340px;
+    max-width: calc(100% - 3rem);
+    padding: 1rem 1.25rem;
+    border-radius: 1.25rem;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+
+    h3 {
+      margin: 0 0 0.3rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #c4fafe;
+    }
+
+    .control-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 2.3fr) auto;
+      align-items: center;
+      gap: 0.5rem;
+
+      label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #9ca3af;
+      }
+
+      input[type='range'] {
+        width: 100%;
+      }
+
+      span {
+        font-variant-numeric: tabular-nums;
+        font-size: 0.7rem;
+        color: #e5e7eb;
+        text-align: right;
+        min-width: 2.5rem;
+      }
+
+      &.color-row {
+        grid-template-columns: minmax(0, 1.6fr) auto 1fr;
+
+        input[type='color'] {
+          border-radius: 999px;
+          border: 1px solid rgba(148, 163, 184, 0.7);
+          padding: 0;
+          width: 32px;
+          height: 18px;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        .color-hex {
+          font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+            Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        }
+      }
+    }
+
+    .settings-block {
+      margin-top: 0.2rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #9ca3af;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 120px;
+        resize: vertical;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        background: rgba(15, 23, 42, 0.85);
+        color: #e5e7eb;
+        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
+          Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+      }
+    }
+  }
+
+  .home-hero {
+    position: relative; // IMPORTANTE para que el absolute funcione
+    width: 100%;
+    height: 100vh;
+    background: #000; // o tu fondo (imagen/vídeo)
+    overflow: hidden;
+    padding-top: 64px; // altura del header fijo para que no se solape
+  }
+
+  /* Si usas video/imagen de fondo */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Bloque de texto */
+  .home-intro {
+    position: absolute;
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
+    max-width: 50vw;
+    color: #fff;
+    text-align: left;
+  }
+
+  /* “MORE THAN A” */
+  .home-intro-eyebrow {
+    font-size: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    color: #ffffff;
+  }
+
+  /* Título principal */
+  .home-intro-title {
+    margin: 0 0 16px;
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .home-intro-title span {
+    color: #f7931e; // naranja
+    font-weight: 600;
+  }
+
+  .home-intro-title .strong {
+    color: #ffffff; // “COLLECTIVE” en blanco fuerte
+  }
+
+  /* Subtítulo */
+  .home-intro-subtitle {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #cccccc;
+    margin: 0 0 24px;
+  }
+
+  /* Botón */
+  .home-intro-cta {
+    border: none;
+    padding: 10px 32px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: #f7931e;
+    color: #ffffff;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .home-intro-cta:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  @media (max-width: 900px) {
+    .home-intro {
+      right: 8%;
+      max-width: 80%;
+    }
+
+    .home-intro-title {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .home-intro {
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+  }
+
 }
 
-.three-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  display: block;
-}
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
 
-.feature-content {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  text-align: center;
-  padding-top: 20vh;
+  to {
+    box-shadow: 0 0 24px rgba(110, 97, 255, 1);
+  }
 }

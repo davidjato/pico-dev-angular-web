@@ -1,0 +1,389 @@
+// Lógica Three.js para el contador neón coming soon
+// Se importa y se usa en el componente Angular
+import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
+import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+export interface ComingSoonCountdownOptions {
+    container: HTMLElement;
+}
+
+export class ComingSoonCountdown3D {
+    private scene!: THREE.Scene;
+    private camera!: THREE.OrthographicCamera;
+    private renderer!: THREE.WebGLRenderer;
+    private composer!: EffectComposer;
+    private controls!: OrbitControls;
+    private bloomPass!: UnrealBloomPass;
+    private floor: Reflector | undefined;
+    private root!: THREE.Group;
+    private secondBoxes: THREE.Group[] = [];
+    private ALL_DIGIT_GROUPS: THREE.Group[] = [];
+    private paused = false;
+    private DIGITS = 0;
+    private TARGET_DATE = new Date('2026-09-30T00:00:00+02:00');
+    private orthoSize = 60;
+    private reflectResolutionScale = 0.3;
+    private currentReflectStrength = 0.08;
+    private baseFloorColor = new THREE.Color(0x0a0f14);
+    private animationId: number | null = null;
+
+    constructor(private options: ComingSoonCountdownOptions) {
+        this.init();
+    }
+
+    private addGUIControls() {
+        const params = {
+            neonColor: '#' + this.CONFIG.NEON_COLOR.getHexString(),
+            frameColor: '#' + this.CONFIG.FRAME_COLOR.getHexString(),
+            zoom: this.camera.zoom,
+            bloomStrength: this.bloomPass.strength,
+            bloomRadius: this.bloomPass.radius,
+            bloomThreshold: this.bloomPass.threshold
+        };
+        const gui = new GUI();
+        // Mover el panel lil-gui dentro del contenedor de la sección
+        if (this.options.container && this.options.container.appendChild) {
+            this.options.container.appendChild(gui.domElement);
+        }
+        gui.title('Contador Coming Soon');
+        // Eliminar posicionamiento fixed para que el panel quede estático en el flujo del DOM
+        gui.domElement.style.position = '';
+        gui.domElement.style.top = '';
+        gui.domElement.style.left = '';
+        gui.domElement.style.zIndex = '';
+
+        gui.addColor(params, 'neonColor').name('Color Neón').onChange((v: string) => {
+            this.CONFIG.NEON_COLOR.set(v);
+            this.ALL_DIGIT_GROUPS.forEach(g => {
+                (g.userData['onMat'] as THREE.MeshBasicMaterial).color.set(this.CONFIG.NEON_COLOR);
+            });
+        });
+
+        gui.addColor(params, 'frameColor').name('Color Marco').onChange((v: string) => {
+            this.CONFIG.FRAME_COLOR.set(v);
+            // Actualizar todos los marcos de los paneles existentes
+            this.secondBoxes.forEach(panel => {
+                panel.traverse(obj => {
+                    if (obj.type === 'LineSegments') {
+                        const mat = (obj as THREE.LineSegments).material;
+                        if ((mat as any).color) {
+                            (mat as THREE.LineBasicMaterial).color.set(this.CONFIG.FRAME_COLOR);
+                            (mat as THREE.LineBasicMaterial).needsUpdate = true;
+                        }
+                    }
+                });
+            });
+        });
+
+        gui.add(params, 'zoom', 0.05, 3, 0.01).name('Zoom (alejar/acercar)').onChange((v: number) => {
+            this.camera.zoom = v;
+            this.camera.updateProjectionMatrix();
+        });
+
+        const bloomFolder = gui.addFolder('Bloom');
+        bloomFolder.add(params, 'bloomStrength', 0, 5, 0.01).name('Fuerza').onChange((v: number) => {
+            this.bloomPass.strength = v;
+        });
+        bloomFolder.add(params, 'bloomRadius', 0, 2, 0.01).name('Radio').onChange((v: number) => {
+            this.bloomPass.radius = v;
+        });
+        bloomFolder.add(params, 'bloomThreshold', 0, 1, 0.01).name('Umbral').onChange((v: number) => {
+            this.bloomPass.threshold = v;
+        });
+        bloomFolder.open();
+    }
+
+    private CONFIG = {
+        NEON_COLOR: new THREE.Color('#ff7300'),
+        FRAME_COLOR: new THREE.Color('#ff7300'),
+        OFF_COLOR: new THREE.Color('#0b151a'),
+        PANEL_COLOR: new THREE.Color('#091016'),
+        BLOOM_STRENGTH: 1.2,
+        BLOOM_RADIUS: 0.6,
+        BLOOM_THRESHOLD: 0.0,
+        DIGIT_W: 12,
+        DIGIT_H: 20,
+        SEG_T: 2.2,
+        PANEL_PADDING_X: 6,
+        PANEL_PADDING_Y: 8,
+        GAP_BETWEEN_PANELS: 6,
+        GAP_BETWEEN_DIGITS: 3.5
+    };
+
+    private SEGMENTS_BY_DIGIT = {
+        0: [0, 1, 2, 3, 4, 5],
+        1: [1, 2],
+        2: [0, 1, 6, 4, 3],
+        3: [0, 1, 2, 3, 6],
+        4: [5, 6, 1, 2],
+        5: [0, 5, 6, 2, 3],
+        6: [0, 5, 4, 3, 2, 6],
+        7: [0, 1, 2],
+        8: [0, 1, 2, 3, 4, 5, 6],
+        9: [0, 1, 2, 3, 5, 6]
+    };
+
+    private init() {
+        const container = this.options.container;
+        this.scene = new THREE.Scene();
+        this.scene.fog = new THREE.Fog(0x05070c, 120, 220);
+        const aspect = window.innerWidth / window.innerHeight;
+        this.camera = new THREE.OrthographicCamera(
+            -this.orthoSize * aspect, this.orthoSize * aspect,
+            this.orthoSize, -this.orthoSize,
+            0.1, 1000
+        );
+        this.camera.zoom = 0.44;
+        this.camera.position.set(0, 0, 120);
+        this.camera.lookAt(0, 0, 0);
+        this.camera.rotation.set(0, 0, 0);
+        this.camera.updateProjectionMatrix();
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.2;
+        container.appendChild(this.renderer.domElement);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableRotate = false;
+        this.controls.enablePan = false;
+        this.controls.enableDamping = true;
+        this.controls.zoomSpeed = 0.8;
+        this.controls.minZoom = 0.05;
+        this.controls.maxZoom = 3;
+        this.controls.target.set(0, 0, 0);
+        this.controls.update();
+        this.composer = new EffectComposer(this.renderer);
+        const renderPass = new RenderPass(this.scene, this.camera);
+        this.composer.addPass(renderPass);
+        this.bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            this.CONFIG.BLOOM_STRENGTH,
+            this.CONFIG.BLOOM_RADIUS,
+            this.CONFIG.BLOOM_THRESHOLD
+        );
+        this.composer.addPass(this.bloomPass);
+        this.buildFloor();
+        this.root = new THREE.Group();
+        this.scene.add(this.root);
+        const initialSeconds = this.secondsUntil(this.TARGET_DATE);
+        this.DIGITS = Math.max(1, initialSeconds.toString().length);
+        for (let i = 0; i < this.DIGITS; i++) {
+            const p = this.createPanel(1);
+            this.root.add(p);
+            this.secondBoxes.push(p);
+        }
+        this.layout();
+        window.addEventListener('resize', this.onResize);
+        this.animate();
+        // Añadir GUI para color y zoom (debe ir después de inicializar cámara y escena)
+        this.addGUIControls();
+    }
+
+    private buildFloor() {
+        if (this.floor) {
+            this.scene.remove(this.floor);
+            this.floor.geometry?.dispose?.();
+            // Reflector.material is always a single Material, not an array
+            (this.floor.material as THREE.Material).dispose?.();
+        }
+        const floorGeo = new THREE.PlaneGeometry(2000, 2000);
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        const texW = Math.max(128, Math.floor(window.innerWidth * dpr * this.reflectResolutionScale));
+        const texH = Math.max(128, Math.floor(window.innerHeight * dpr * this.reflectResolutionScale));
+        this.floor = new Reflector(floorGeo, {
+            textureWidth: texW,
+            textureHeight: texH,
+            color: this.baseFloorColor.getHex(),
+            multisample: 4,
+            clipBias: 0.003
+        });
+        this.floor.rotation.x = -Math.PI / 2;
+        this.floor.position.y = -22;
+        this.scene.add(this.floor);
+        (this.floor.material as any).uniforms.color.value.copy(this.baseFloorColor).multiplyScalar(this.currentReflectStrength);
+    }
+
+    private createDigitGroup(): THREE.Group {
+        const g = new THREE.Group();
+        const W2 = this.CONFIG.DIGIT_W / 2;
+        const H2 = this.CONFIG.DIGIT_H / 2;
+        const t = this.CONFIG.SEG_T;
+        const hW = this.CONFIG.DIGIT_W - 2 * t;
+        const hH = t;
+        const vW = t;
+        const vH = H2 - 1.5 * t;
+        const onMat = new THREE.MeshBasicMaterial({ color: this.CONFIG.NEON_COLOR, transparent: true, opacity: 1 });
+        const offMat = new THREE.MeshBasicMaterial({ color: this.CONFIG.OFF_COLOR, transparent: true, opacity: 0.6 });
+        function horiz(y: number) {
+            const geo = new THREE.PlaneGeometry(hW, hH);
+            const mesh = new THREE.Mesh(geo, offMat.clone());
+            mesh.position.y = y;
+            g.add(mesh);
+            return mesh;
+        }
+        function vert(x: number, y: number) {
+            const geo = new THREE.PlaneGeometry(vW, vH);
+            const mesh = new THREE.Mesh(geo, offMat.clone());
+            mesh.position.set(x, y, 0);
+            g.add(mesh);
+            return mesh;
+        }
+        const A = horiz(H2 - hH / 2);
+        const B = vert(W2 - vW / 2, (H2 - t - vH / 2));
+        const C = vert(W2 - vW / 2, -(H2 - t - vH / 2));
+        const D = horiz(-H2 + hH / 2);
+        const E = vert(-W2 + vW / 2, -(H2 - t - vH / 2));
+        const F = vert(-W2 + vW / 2, (H2 - t - vH / 2));
+        const G = horiz(0);
+        g.userData = {
+            segments: [A, B, C, D, E, F, G],
+            onMat,
+            offMat,
+            setValue: (value: number) => {
+                const v = Math.max(0, Math.min(9, value | 0));
+                const list = this.SEGMENTS_BY_DIGIT[v as keyof typeof this.SEGMENTS_BY_DIGIT];
+                (g.userData['segments'] as THREE.Mesh[]).forEach((mesh: THREE.Mesh, i: number) => {
+                    const on = list.includes(i);
+                    mesh.material = (on ? onMat : offMat);
+                    mesh.material.needsUpdate = true;
+                });
+            },
+            flicker: (intensity = 0.02) => {
+                (g.userData['segments'] as THREE.Mesh[]).forEach((mesh: THREE.Mesh) => {
+                    if (mesh.material === onMat) {
+                        const base = 1.0;
+                        const delta = (Math.random() - 0.5) * intensity;
+                        (mesh.material as THREE.MeshBasicMaterial).opacity = Math.max(0.88, Math.min(1.0, base + delta));
+                        mesh.material.needsUpdate = true;
+                    }
+                });
+            }
+        };
+        this.ALL_DIGIT_GROUPS.push(g);
+        return g;
+    }
+
+    private createPanel(digitCount = 1): THREE.Group {
+        const panel = new THREE.Group();
+        const padX = this.CONFIG.PANEL_PADDING_X;
+        const padY = this.CONFIG.PANEL_PADDING_Y;
+        const totalW = digitCount * this.CONFIG.DIGIT_W + (digitCount - 1) * this.CONFIG.GAP_BETWEEN_DIGITS + padX * 2;
+        const totalH = this.CONFIG.DIGIT_H + padY * 2;
+        const bgGeo = new THREE.PlaneGeometry(totalW, totalH, 1, 1);
+        const bgMat = new THREE.MeshBasicMaterial({ color: this.CONFIG.PANEL_COLOR, transparent: true, opacity: 0.85 });
+        const bg = new THREE.Mesh(bgGeo, bgMat);
+        bg.position.z = -0.2;
+        panel.add(bg);
+        const frameGeo = new THREE.BoxGeometry(totalW, totalH, 0.4);
+        const edges = new THREE.EdgesGeometry(frameGeo);
+        const frame = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: this.CONFIG.FRAME_COLOR }));
+        frame.position.z = -0.21;
+        panel.add(frame);
+        const digits: THREE.Group[] = [];
+        const startX = - ((digitCount - 1) * (this.CONFIG.DIGIT_W + this.CONFIG.GAP_BETWEEN_DIGITS)) / 2;
+        for (let i = 0; i < digitCount; i++) {
+            const d = this.createDigitGroup();
+            d.position.x = startX + i * (this.CONFIG.DIGIT_W + this.CONFIG.GAP_BETWEEN_DIGITS);
+            panel.add(d);
+            digits.push(d);
+        }
+        panel.userData = {
+            digits,
+            setNumber: (n: number, pad = digitCount) => {
+                const s = Math.abs(n | 0).toString().padStart(pad, '0').slice(-pad);
+                for (let i = 0; i < pad; i++) digits[i].userData['setValue'](Number(s[i]));
+            },
+            flicker: () => { digits.forEach(d => d.userData['flicker']()); }
+        };
+        return panel;
+    }
+
+    private layout() {
+        const widths = this.secondBoxes.map(obj => {
+            obj.updateWorldMatrix(true, true);
+            const box = new THREE.Box3().setFromObject(obj);
+            return box.getSize(new THREE.Vector3()).x;
+        });
+        const totalW = widths.reduce((a, b) => a + b, 0) + this.CONFIG.GAP_BETWEEN_PANELS * (widths.length - 1);
+        let x = -totalW / 2;
+        this.secondBoxes.forEach((obj, i) => {
+            const w = widths[i];
+            obj.position.x = x + w / 2;
+            x += w + this.CONFIG.GAP_BETWEEN_PANELS;
+        });
+        this.root.position.y = 4;
+        this.root.rotation.set(0, 0, 0);
+    }
+
+    private secondsUntil(date: Date) {
+        return Math.max(0, Math.floor((date.getTime() - new Date().getTime()) / 1000));
+    }
+
+    private updateCountdown() {
+        if (this.paused) return;
+        const secs = this.secondsUntil(this.TARGET_DATE);
+        const s = secs.toString().padStart(this.DIGITS, '0');
+        for (let i = 0; i < this.DIGITS; i++) {
+            this.secondBoxes[i].userData['setNumber'](Number(s[i]), 1);
+            this.secondBoxes[i].userData['flicker']();
+        }
+    }
+
+    private onResize = () => {
+        const aspect = window.innerWidth / window.innerHeight;
+        this.camera.left = -this.orthoSize * aspect;
+        this.camera.right = this.orthoSize * aspect;
+        this.camera.top = this.orthoSize;
+        this.camera.bottom = -this.orthoSize;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.composer.setSize(window.innerWidth, window.innerHeight);
+        this.buildFloor();
+        this.layout();
+    };
+
+    private animate = () => {
+        this.animationId = requestAnimationFrame(this.animate);
+        this.root.position.z = 0;
+        this.updateCountdown();
+        this.controls.update();
+        this.composer.render();
+    };
+
+    public pause() {
+        this.paused = true;
+    }
+    public resume() {
+        this.paused = false;
+    }
+    public togglePause() {
+        this.paused = !this.paused;
+    }
+    public isPaused() {
+        return this.paused;
+    }
+    public dispose() {
+        if (this.animationId) cancelAnimationFrame(this.animationId);
+        window.removeEventListener('resize', this.onResize);
+        this.renderer.dispose();
+        this.composer.dispose();
+        this.controls.dispose();
+        this.ALL_DIGIT_GROUPS.length = 0;
+        this.secondBoxes.length = 0;
+        this.root.clear();
+        if (this.floor) {
+            this.scene.remove(this.floor);
+            this.floor.geometry?.dispose?.();
+            (this.floor.material as THREE.Material).dispose?.();
+        }
+        if (this.options.container.contains(this.renderer.domElement)) {
+            this.options.container.removeChild(this.renderer.domElement);
+        }
+    }
+}

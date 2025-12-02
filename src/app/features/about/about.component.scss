@@ -1,87 +1,78 @@
-
-
-.three-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  display: block;
-}
-
-.feature-content {
-  position: relative;
-  z-index: 2;
-  color: #fff;
-  text-align: center;
-  padding-top: 20vh;
-}
-
 .feature-section {
-  width: 100%;
-  height: 100vh;
+
   position: relative;
   overflow: hidden;
-}
-
-.three-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  display: block;
-}
-
-.feature-content.about-flex {
-  position: relative;
-  z-index: 2;
-  color: #fff;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  gap: 4vw;
+  padding: 4rem;
 }
 
 .about-menu {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: transparent;
+  position: relative;
+}
+
+.about-menu ul {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
 }
-.about-menu button {
-  background: none;
-  border: 2px solid #00fff7;
+
+.about-menu li {
+  font-family: 'Roboto', sans-serif;
+  font-size: 6vw;
+  font-weight: 600;
   color: #fff;
-  font-size: 2rem;
-  padding: 1rem 2rem;
-  border-radius: 2rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  margin-bottom: 2vh;
+  transition: color 0.2s, text-decoration 0.2s;
+  line-height: 1;
+  user-select: none;
+  text-align: left;
+  position: relative;
 }
-.about-menu button.active,
-.about-menu button:hover {
-  background: #00fff7;
-  color: #222;
+
+.about-menu li.selected {
+  color: #ff7300;
+  text-decoration: none;
 }
-.about-text {
-  max-width: 500px;
-  background: rgba(0,0,0,0.7);
-  border-radius: 2rem;
-  padding: 2rem 3rem;
-  box-shadow: 0 0 40px #00fff7aa;
+
+.menu-number {
+  position: absolute;
+  left: -2vw;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1vw;
+  font-weight: 400;
+  color: #ff7300;
+  margin: 0;
+  vertical-align: middle;
 }
-@media (max-width: 900px) {
-  .feature-content.about-flex {
-    flex-direction: column;
-    gap: 2vw;
-    height: auto;
-    padding-top: 10vh;
-  }
-  .about-text {
-    padding: 1.5rem 1rem;
-  }
+
+.about-content {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 3vw;
+}
+
+.about-content-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 2vw;
+  font-weight: 100;
+  color: #fff;
+  max-width: 80%;
+  margin-top: 0.5vh;
 }

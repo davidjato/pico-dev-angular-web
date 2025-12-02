@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HomeComponent } from '../features/home/home.component';
+import { HeaderComponent } from '../shared/header.component';
 import { AboutComponent } from '../features/about/about.component';
 import { WhyUsComponent } from '../features/why-us/why-us.component';
 import { ComingSoonComponent } from '../features/coming-soon/coming-soon.component';
@@ -12,16 +13,15 @@ import { ContactComponent } from '../features/contact/contact.component';
   imports: [
     TranslateModule,
     HomeComponent,
-    AboutComponent,
+    HeaderComponent,
+    ComingSoonComponent, AboutComponent,
     WhyUsComponent,
-    ComingSoonComponent,
-    ContactComponent
   ],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent {
-  constructor(public translate: TranslateService) {}
+  constructor(public translate: TranslateService) { }
 
   changeLang(lang: string) {
     this.translate.use(lang);

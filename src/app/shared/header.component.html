@@ -1,0 +1,31 @@
+<header class="main-header">
+    <div class="header-inner">
+        <!-- Izquierda: Logo -->
+        <a href="#home" class="brand">
+            <div class="brand-logo">
+                <img src="assets/icons/logo.png" alt="Logo" />
+            </div>
+        </a>
+        <!-- Derecha: Menú + idiomas -->
+        <div class="header-right">
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#who">Who</a></li>
+                <li><a href="#where">Where</a></li>
+                <li><a href="#collab">Collab</a></li>
+            </ul>
+            <span class="divider"></span>
+            <div class="lang-switcher">
+                <button type="button" [class.active]="currentLang === 'en'" (click)="changeLang('en')">
+                    EN
+                </button>
+                <button type="button" [class.active]="currentLang === 'fr'" (click)="changeLang('fr')">
+                    FR
+                </button>
+                <button type="button" [class.active]="currentLang === 'es'" (click)="changeLang('es')">
+                    ES
+                </button>
+            </div>
+        </div>
+    </div>
+</header>

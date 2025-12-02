@@ -1,104 +1,16 @@
-
-
 <section class="feature-section">
-  <canvas #threeCanvas class="three-bg"></canvas>
-  <div class="feature-content whyus-flex">
-    <div class="whyus-menu">
-      <button *ngFor="let opt of menuOptions"
-              (mouseenter)="setHovered(opt.key)"
-              (mouseleave)="setHovered(null)">
-        {{ opt.label | translate }}
-      </button>
-    </div>
-    <div class="whyus-text">
-      <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-      <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-      <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-<section class="feature-section">
-<section class="feature-section">
-<section class="feature-section">
-<section class="feature-section">
-  <canvas #threeCanvas class="three-bg"></canvas>
-  <div class="feature-content whyus-flex">
-    <div class="whyus-menu">
-      <button *ngFor="let opt of menuOptions"
-              (mouseenter)="setHovered(opt.key)"
-              (mouseleave)="setHovered(null)">
-        {{ opt.label | translate }}
-      </button>
-    </div>
-    <div class="whyus-text">
-      <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-      <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-      <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-    </div>
+  <div #threeBg class="three-bg"></div>
+  <div class="hint">Arrastra para orbitar • Rueda para hacer zoom • <b>Neón</b> cuando suben</div>
+  <div class="controls-panel">
+    <label>
+      Bloom:
+      <input type="range" min="0" max="1" step="0.01" [value]="bloomStrength" (input)="onBloomChange($event.target.valueAsNumber)">
+      <span>{{ bloomStrength | number:'1.2-2' }}</span>
+    </label>
+    <label>
+      Exposición:
+      <input type="range" min="0.1" max="2" step="0.01" [value]="exposure" (input)="onExposureChange($event.target.valueAsNumber)">
+      <span>{{ exposure | number:'1.2-2' }}</span>
+    </label>
   </div>
 </section>
-  <canvas #threeCanvas class="three-bg"></canvas>
-  <div class="feature-content whyus-flex">
-    <div class="whyus-menu">
-      <button *ngFor="let opt of menuOptions"
-              (mouseenter)="setHovered(opt.key)"
-              (mouseleave)="setHovered(null)">
-        {{ opt.label | translate }}
-      </button>
-    </div>
-    <div class="whyus-text">
-      <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-      <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-      <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-    </div>
-  </div>
-</section>
-  <canvas #threeCanvas class="three-bg"></canvas>
-  <div class="feature-content whyus-flex">
-    <div class="whyus-menu">
-      <button *ngFor="let opt of menuOptions"
-              (mouseenter)="setHovered(opt.key)"
-              (mouseleave)="setHovered(null)">
-        {{ opt.label | translate }}
-      </button>
-    </div>
-    <div class="whyus-text">
-      <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-      <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-      <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-    </div>
-  </div>
-</section>
-  <canvas #threeCanvas class="three-bg"></canvas>
-  <div class="feature-content whyus-flex">
-    <div class="whyus-menu">
-      <button *ngFor="let opt of menuOptions"
-              (mouseenter)="setHovered(opt.key)"
-              (mouseleave)="setHovered(null)">
-        {{ opt.label | translate }}
-      </button>
-    </div>
-    <div class="whyus-text">
-      <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-      <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-      <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-    </div>
-  </div>
-</section>
-    </div>
-  </div>
-</section>
-  <section class="feature-section">
-    <canvas #threeCanvas class="three-bg"></canvas>
-    <div class="feature-content whyus-flex">
-      <div class="whyus-menu">
-        <button *ngFor="let opt of menuOptions"
-                (mouseenter)="setHovered(opt.key)"
-                (mouseleave)="setHovered(null)">
-          {{ opt.label | translate }}
-        </button>
-      </div>
-      <div class="whyus-text">
-        <h2>{{ 'WHYUS.TITLE' | translate }}</h2>
-        <p *ngIf="hoveredOption; else desc">{{ hoveredTextKey | translate }}</p>
-        <ng-template #desc><p>{{ 'WHYUS.DESCRIPTION' | translate }}</p></ng-template>
-      </div>
-    </div>
-  </section>
