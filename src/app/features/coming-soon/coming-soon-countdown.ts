@@ -10,6 +10,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 export interface ComingSoonCountdownOptions {
     container: HTMLElement;
+    guiContainer?: HTMLElement;
 }
 
 export class ComingSoonCountdown3D {
@@ -17,7 +18,7 @@ export class ComingSoonCountdown3D {
     private camera!: THREE.OrthographicCamera;
     private renderer!: THREE.WebGLRenderer;
     private composer!: EffectComposer;
-    private controls!: OrbitControls;
+    private controls!: OrbitControls | undefined;
     private bloomPass!: UnrealBloomPass;
     private floor: Reflector | undefined;
     private root!: THREE.Group;
@@ -31,42 +32,81 @@ export class ComingSoonCountdown3D {
     private currentReflectStrength = 0.08;
     private baseFloorColor = new THREE.Color(0x0a0f14);
     private animationId: number | null = null;
+    private guiInitialized = false;
 
     constructor(private options: ComingSoonCountdownOptions) {
         this.init();
     }
 
     private addGUIControls() {
+        if (this.guiInitialized || !this.options.guiContainer) return;
+        this.guiInitialized = true;
+
         const params = {
             neonColor: '#' + this.CONFIG.NEON_COLOR.getHexString(),
+            offColor: '#' + this.CONFIG.OFF_COLOR.getHexString(),
+            panelBgColor: '#' + this.CONFIG.PANEL_COLOR.getHexString(),
             frameColor: '#' + this.CONFIG.FRAME_COLOR.getHexString(),
-            zoom: this.camera.zoom,
+            fogColor: '#05070c',
+            floorColor: '#' + this.baseFloorColor.getHexString(),
+
             bloomStrength: this.bloomPass.strength,
             bloomRadius: this.bloomPass.radius,
-            bloomThreshold: this.bloomPass.threshold
-        };
-        const gui = new GUI();
-        // Mover el panel lil-gui dentro del contenedor de la sección
-        if (this.options.container && this.options.container.appendChild) {
-            this.options.container.appendChild(gui.domElement);
-        }
-        gui.title('Contador Coming Soon');
-        // Eliminar posicionamiento fixed para que el panel quede estático en el flujo del DOM
-        gui.domElement.style.position = '';
-        gui.domElement.style.top = '';
-        gui.domElement.style.left = '';
-        gui.domElement.style.zIndex = '';
+            bloomThreshold: this.bloomPass.threshold,
 
-        gui.addColor(params, 'neonColor').name('Color Neón').onChange((v: string) => {
+            zoom: this.camera.zoom,
+            cameraPosX: this.camera.position.x,
+            cameraPosY: this.camera.position.y,
+            cameraPosZ: this.camera.position.z,
+            enableOrbitControls: !!this.controls,
+
+            digitWidth: this.CONFIG.DIGIT_W,
+            digitHeight: this.CONFIG.DIGIT_H,
+            segmentThickness: this.CONFIG.SEG_T,
+            panelPaddingX: this.CONFIG.PANEL_PADDING_X,
+            panelPaddingY: this.CONFIG.PANEL_PADDING_Y,
+            gapBetweenPanels: this.CONFIG.GAP_BETWEEN_PANELS,
+            gapBetweenDigits: this.CONFIG.GAP_BETWEEN_DIGITS,
+
+            reflectionStrength: this.currentReflectStrength,
+            reflectionResolution: this.reflectResolutionScale,
+
+            panelBgOpacity: 0.85,
+            offSegmentOpacity: 0.6,
+
+            rootPosY: this.root.position.y
+        };
+
+        // GUI deshabilitado
+        /*
+        const gui = new GUI();
+        gui.title('⏱️ Coming Soon');
+
+        // Añadir al contenedor compartido
+        this.options.guiContainer.appendChild(gui.domElement);
+
+        // Configurar estilos para quitar posicionamiento fixed
+        gui.domElement.style.position = 'relative';
+        gui.domElement.style.top = 'auto';
+        gui.domElement.style.right = 'auto';
+        gui.domElement.style.margin = '0';
+
+        // === COLORES ===
+        const colorsFolder = gui.addFolder('🎨 Colores');
+        colorsFolder.addColor(params, 'neonColor').name('Neón').onChange((v: string) => {
             this.CONFIG.NEON_COLOR.set(v);
             this.ALL_DIGIT_GROUPS.forEach(g => {
                 (g.userData['onMat'] as THREE.MeshBasicMaterial).color.set(this.CONFIG.NEON_COLOR);
             });
         });
-
-        gui.addColor(params, 'frameColor').name('Color Marco').onChange((v: string) => {
+        colorsFolder.addColor(params, 'offColor').name('Segmento Apagado').onChange((v: string) => {
+            this.CONFIG.OFF_COLOR.set(v);
+        });
+        colorsFolder.addColor(params, 'panelBgColor').name('Fondo Panel').onChange((v: string) => {
+            this.CONFIG.PANEL_COLOR.set(v);
+        });
+        colorsFolder.addColor(params, 'frameColor').name('Marco').onChange((v: string) => {
             this.CONFIG.FRAME_COLOR.set(v);
-            // Actualizar todos los marcos de los paneles existentes
             this.secondBoxes.forEach(panel => {
                 panel.traverse(obj => {
                     if (obj.type === 'LineSegments') {
@@ -79,13 +119,18 @@ export class ComingSoonCountdown3D {
                 });
             });
         });
-
-        gui.add(params, 'zoom', 0.05, 3, 0.01).name('Zoom (alejar/acercar)').onChange((v: number) => {
-            this.camera.zoom = v;
-            this.camera.updateProjectionMatrix();
+        colorsFolder.addColor(params, 'fogColor').name('Niebla').onChange((v: string) => {
+            if (this.scene.fog) (this.scene.fog as THREE.Fog).color.set(v);
+        });
+        colorsFolder.addColor(params, 'floorColor').name('Piso Reflectante').onChange((v: string) => {
+            this.baseFloorColor.set(v);
+            if (this.floor) {
+                (this.floor.material as any).uniforms.color.value.copy(this.baseFloorColor).multiplyScalar(this.currentReflectStrength);
+            }
         });
 
-        const bloomFolder = gui.addFolder('Bloom');
+        // === BLOOM ===
+        const bloomFolder = gui.addFolder('✨ Bloom');
         bloomFolder.add(params, 'bloomStrength', 0, 5, 0.01).name('Fuerza').onChange((v: number) => {
             this.bloomPass.strength = v;
         });
@@ -95,15 +140,100 @@ export class ComingSoonCountdown3D {
         bloomFolder.add(params, 'bloomThreshold', 0, 1, 0.01).name('Umbral').onChange((v: number) => {
             this.bloomPass.threshold = v;
         });
-        bloomFolder.open();
+
+        // === CÁMARA ===
+        const cameraFolder = gui.addFolder('📷 Cámara');
+        cameraFolder.add(params, 'zoom', 0.05, 3, 0.01).name('Zoom').onChange((v: number) => {
+            this.camera.zoom = v;
+            this.camera.updateProjectionMatrix();
+        });
+        cameraFolder.add(params, 'cameraPosX', -100, 100, 1).name('Posición X').onChange((v: number) => {
+            this.camera.position.x = v;
+        });
+        cameraFolder.add(params, 'cameraPosY', -100, 100, 1).name('Posición Y').onChange((v: number) => {
+            this.camera.position.y = v;
+        });
+        cameraFolder.add(params, 'cameraPosZ', -200, 200, 1).name('Posición Z').onChange((v: number) => {
+            this.camera.position.z = v;
+        });
+        cameraFolder.add(params, 'enableOrbitControls').name('Controles Órbita').onChange((v: boolean) => {
+            if (v && !this.controls) {
+                this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+            } else if (!v && this.controls) {
+                this.controls.dispose();
+                this.controls = undefined;
+            }
+        });
+
+        // === DIMENSIONES ===
+        const dimensionsFolder = gui.addFolder('📐 Dimensiones');
+        dimensionsFolder.add(params, 'digitWidth', 5, 25, 0.5).name('Ancho Dígito').onChange((v: number) => {
+            this.CONFIG.DIGIT_W = v;
+        });
+        dimensionsFolder.add(params, 'digitHeight', 10, 40, 0.5).name('Alto Dígito').onChange((v: number) => {
+            this.CONFIG.DIGIT_H = v;
+        });
+        dimensionsFolder.add(params, 'segmentThickness', 0.5, 5, 0.1).name('Grosor Segmento').onChange((v: number) => {
+            this.CONFIG.SEG_T = v;
+        });
+        dimensionsFolder.add(params, 'panelPaddingX', 0, 20, 0.5).name('Padding X Panel').onChange((v: number) => {
+            this.CONFIG.PANEL_PADDING_X = v;
+        });
+        dimensionsFolder.add(params, 'panelPaddingY', 0, 20, 0.5).name('Padding Y Panel').onChange((v: number) => {
+            this.CONFIG.PANEL_PADDING_Y = v;
+        });
+        dimensionsFolder.add(params, 'gapBetweenPanels', 0, 20, 0.5).name('Espacio Entre Paneles').onChange((v: number) => {
+            this.CONFIG.GAP_BETWEEN_PANELS = v;
+            this.layout();
+        });
+        dimensionsFolder.add(params, 'gapBetweenDigits', 0, 10, 0.5).name('Espacio Entre Dígitos').onChange((v: number) => {
+            this.CONFIG.GAP_BETWEEN_DIGITS = v;
+        });
+
+        // === REFLEXIONES ===
+        const reflectionsFolder = gui.addFolder('💧 Reflexiones');
+        reflectionsFolder.add(params, 'reflectionStrength', 0, 1, 0.01).name('Intensidad').onChange((v: number) => {
+            this.currentReflectStrength = v;
+            if (this.floor) {
+                (this.floor.material as any).uniforms.color.value.copy(this.baseFloorColor).multiplyScalar(v);
+            }
+        });
+        reflectionsFolder.add(params, 'reflectionResolution', 0.1, 2, 0.1).name('Resolución').onChange((v: number) => {
+            this.reflectResolutionScale = v;
+            this.buildFloor();
+        });
+
+        // === EFECTOS ===
+        const effectsFolder = gui.addFolder('⚡ Efectos');
+        effectsFolder.add(params, 'panelBgOpacity', 0, 1, 0.01).name('Opacidad Fondo Panel').onChange((v: number) => {
+            this.secondBoxes.forEach(panel => {
+                panel.traverse(obj => {
+                    if (obj instanceof THREE.Mesh && obj.geometry.type === 'PlaneGeometry') {
+                        (obj.material as THREE.MeshBasicMaterial).opacity = v;
+                    }
+                });
+            });
+        });
+        effectsFolder.add(params, 'offSegmentOpacity', 0, 1, 0.01).name('Opacidad Segmento OFF').onChange((v: number) => {
+            this.ALL_DIGIT_GROUPS.forEach(g => {
+                (g.userData['offMat'] as THREE.MeshBasicMaterial).opacity = v;
+            });
+        });
+
+        // === POSICIÓN ===
+        const positionFolder = gui.addFolder('📍 Posición');
+        positionFolder.add(params, 'rootPosY', -50, 50, 0.5).name('Altura Contador').onChange((v: number) => {
+            this.root.position.y = v;
+        });
+        */
     }
 
     private CONFIG = {
-        NEON_COLOR: new THREE.Color('#ff7300'),
-        FRAME_COLOR: new THREE.Color('#ff7300'),
+        NEON_COLOR: new THREE.Color('#FF7A00'),
+        FRAME_COLOR: new THREE.Color('#FF7A00'),
         OFF_COLOR: new THREE.Color('#0b151a'),
         PANEL_COLOR: new THREE.Color('#091016'),
-        BLOOM_STRENGTH: 1.2,
+        BLOOM_STRENGTH: 3.0,
         BLOOM_RADIUS: 0.6,
         BLOOM_THRESHOLD: 0.0,
         DIGIT_W: 12,
@@ -352,7 +482,7 @@ export class ComingSoonCountdown3D {
         this.animationId = requestAnimationFrame(this.animate);
         this.root.position.z = 0;
         this.updateCountdown();
-        this.controls.update();
+        this.controls?.update();
         this.composer.render();
     };
 
@@ -373,7 +503,7 @@ export class ComingSoonCountdown3D {
         window.removeEventListener('resize', this.onResize);
         this.renderer.dispose();
         this.composer.dispose();
-        this.controls.dispose();
+        this.controls?.dispose();
         this.ALL_DIGIT_GROUPS.length = 0;
         this.secondBoxes.length = 0;
         this.root.clear();

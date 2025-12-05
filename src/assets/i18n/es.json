@@ -39,6 +39,24 @@
     },
     "DESCRIPTION": "Razones para elegirnos."
   },
+  "WHY_US": {
+    "POINT_1": {
+      "TITLE": "Celebrar",
+      "DESCRIPTION": "Más que un evento — una celebración consciente. Ven por la música — quédate por el significado. Producción de clase mundial que celebra con propósito"
+    },
+    "POINT_2": {
+      "TITLE": "Conciencia",
+      "DESCRIPTION": "Expande tu conciencia a través de experiencias inmersivas y talleres transformadores"
+    },
+    "POINT_3": {
+      "TITLE": "Comunidad",
+      "DESCRIPTION": "Conecta con almas afines en un espacio de autenticidad y pertenencia"
+    },
+    "POINT_4": {
+      "TITLE": "Impacto",
+      "DESCRIPTION": "Cada entrada contribuye a iniciativas sociales y ambientales significativas"
+    }
+  },
   "COMINGSOON": {
     "TITLE": "Próximamente",
     "DESCRIPTION": "Esta sección estará disponible pronto.",

@@ -39,6 +39,24 @@
     },
     "DESCRIPTION": "Reasons to choose us."
   },
+  "WHY_US": {
+    "POINT_1": {
+      "TITLE": "Celebrate",
+      "DESCRIPTION": "More than an event — a conscious celebration Come for the music — stay for the meaning World-class production that celebrates with purpose"
+    },
+    "POINT_2": {
+      "TITLE": "Awareness",
+      "DESCRIPTION": "Expand consciousness through immersive experiences and transformative workshops"
+    },
+    "POINT_3": {
+      "TITLE": "Community",
+      "DESCRIPTION": "Connect with like-minded souls in a space of authenticity and belonging"
+    },
+    "POINT_4": {
+      "TITLE": "Impact",
+      "DESCRIPTION": "Every ticket contributes to meaningful social and environmental initiatives"
+    }
+  },
   "COMINGSOON": {
     "TITLE": "Coming Soon",
     "DESCRIPTION": "This section will be available soon.",

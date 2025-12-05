@@ -26,7 +26,7 @@ extend(THREE);
       <!-- Luces cálidas -->
       <ngt-ambient-light [args]="['#330b03', 0.5]" />
       <ngt-spot-light
-        [args]="['#ff7a2a', 2.5]"
+        [args]="['#FF7A00', 2.5]"
         [position]="[0, 2.5, 3]"
         [angle]="0.7"
         [penumbra]="0.7"

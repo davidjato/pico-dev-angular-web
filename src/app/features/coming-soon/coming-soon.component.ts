@@ -15,6 +15,7 @@ export class ComingSoonComponent implements AfterViewInit, OnDestroy {
   private scrollTopEl?: HTMLElement;
   private scrollBottomEl?: HTMLElement;
   private scrollHandler?: () => void;
+  private animationFrameId?: number;
 
   constructor(private renderer: Renderer2) { }
 
@@ -30,42 +31,62 @@ export class ComingSoonComponent implements AfterViewInit, OnDestroy {
     this.countdown3D = new ComingSoonCountdown3D({
       container: this.canvasContainer.nativeElement
     });
-    // Animación scroll frases
-    this.scrollTopEl = document.querySelector('.scroll-phrase-top') as HTMLElement;
-    this.scrollBottomEl = document.querySelector('.scroll-phrase-bottom') as HTMLElement;
-    this.scrollHandler = () => {
-      const section = document.querySelector('.coming-soon-root') as HTMLElement;
-      if (!section) return;
-      const sectionRect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      // Solo animar si la sección está en pantalla
-      if (sectionRect.top < viewportHeight && sectionRect.bottom > 0) {
-        // Scroll relativo al inicio de la sección
-        const visibleY = Math.max(0, viewportHeight - sectionRect.top);
-        const maxScroll = sectionRect.height; // Usar toda la altura de la sección
-        const percent = Math.min(Math.max(visibleY / maxScroll, 0), 1);
-        // Frase superior: de izquierda (entra) a derecha (sale)
+    
+    // Usar setTimeout para asegurar que el DOM está listo
+    setTimeout(() => {
+      // Animación scroll frases
+      this.scrollTopEl = document.querySelector('.scroll-phrase-top') as HTMLElement;
+      this.scrollBottomEl = document.querySelector('.scroll-phrase-bottom') as HTMLElement;
+      
+      console.log('Elements found:', {
+        top: !!this.scrollTopEl,
+        bottom: !!this.scrollBottomEl
+      });
+      
+      const updatePhrases = () => {
+        const section = document.querySelector('.coming-soon-root') as HTMLElement;
+        if (!section) return;
+        
+        const scrollY = window.scrollY || window.pageYOffset;
+        const viewportHeight = window.innerHeight;
+        
+        // Calcular offset de la sección en el documento
+        let sectionTop = 0;
+        let element: HTMLElement | null = section;
+        while (element) {
+          sectionTop += element.offsetTop;
+          element = element.offsetParent as HTMLElement | null;
+        }
+        
+        // Frase superior: empieza antes (3.5 viewports antes)
         if (this.scrollTopEl) {
-          const translate = (percent - 0.5) * 100; // -50vw a +50vw, centrado en el medio
-          this.renderer.setStyle(this.scrollTopEl, 'transform', `translateX(${translate}vw)`);
+          const startPointTop = sectionTop - viewportHeight * 3.5;
+          const endPointTop = sectionTop + section.offsetHeight + viewportHeight * 1.5;
+          const animationRangeTop = endPointTop - startPointTop;
+          const progressTop = (scrollY - startPointTop) / animationRangeTop;
+          const translate = (progressTop - 0.5) * 650;
+          this.scrollTopEl.style.transform = `translateX(${translate}%)`;
         }
-        // Frase inferior: de derecha (entra) a izquierda (sale)
+        
+        // Frase inferior: empieza después (1.5 viewports antes)
         if (this.scrollBottomEl) {
-          const translate = -(percent - 0.5) * 100; // +50vw a -50vw, centrado en el medio
-          this.renderer.setStyle(this.scrollBottomEl, 'transform', `translateX(${translate}vw)`);
+          const startPointBottom = sectionTop - viewportHeight * 1.5;
+          const endPointBottom = sectionTop + section.offsetHeight + viewportHeight * 1.5;
+          const animationRangeBottom = endPointBottom - startPointBottom;
+          const progressBottom = (scrollY - startPointBottom) / animationRangeBottom;
+          const translate = -(progressBottom - 0.5) * 250;
+          this.scrollBottomEl.style.transform = `translateX(${translate}%)`;
         }
-      } else {
-        // Si no está en pantalla, deja las frases en su posición inicial
-        if (this.scrollTopEl) {
-          this.renderer.setStyle(this.scrollTopEl, 'transform', `translateX(0vw)`);
-        }
-        if (this.scrollBottomEl) {
-          this.renderer.setStyle(this.scrollBottomEl, 'transform', `translateX(0vw)`);
-        }
-      }
-    };
-    window.addEventListener('scroll', this.scrollHandler);
-    this.scrollHandler();
+      };
+      
+      this.scrollHandler = () => {
+        requestAnimationFrame(updatePhrases);
+      };
+      
+      window.addEventListener('scroll', this.scrollHandler, { passive: true });
+      console.log('Scroll listener added');
+      updatePhrases();
+    }, 100);
   }
 
   ngOnDestroy() {

@@ -8,10 +8,12 @@ import {
   OnDestroy,
   ViewChild,
   PLATFORM_ID,
+  inject,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { GuiControlsService } from '../../shared/gui-controls.service';
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -51,7 +53,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  neonColorHex = '#ff7300';
+  neonColorHex = '#FF7A00';
+  private guiService = inject(GuiControlsService);
+  private guiInitialized = false;
+
   constructor(
     private ngZone: NgZone,
     @Inject(PLATFORM_ID) platformId: Object
@@ -62,11 +67,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.isBrowser) {
       this.initThree();
+      this.initGUI();
+
       // Animación de entrada inicial
       const startZ = 40;
       const endZ = 6.73;
       const startColor = { r: 0.0196, g: 0.0196, b: 0.0196 }; // #050505
-      const endColor = { r: 1, g: 0.45098, b: 0 }; // #ff7300
+      const endColor = { r: 1, g: 0.47843, b: 0 }; // #FF7A00
       const startBloom = 0;
       const endBloom = 0.21;
       const startExposure = 0;
@@ -93,25 +100,32 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           this.controls.cameraZ = endZ;
           this.controls.bloomStrength = endBloom;
           this.controls.exposure = endExposure;
-          this.neonColorHex = '#ff7300';
+          this.neonColorHex = '#FF7A00';
           this.onControlsChange();
         }
       };
       requestAnimationFrame(animateAll);
 
       // Efecto scroll: cameraZ va de 6.73 (hero) a 0 (scroll máximo), vuelve a 6.73 al volver arriba
+      // cameraY va de su valor inicial a -2.2
       const heroCameraZ = endZ;
+      const heroCameraY = this.controls.cameraY;
       const minCameraZ = 0;
+      const minCameraY = -2.2;
       const maxScroll = 400; // px para llegar a cameraZ=0
       window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
         if (scrollY <= 0) {
           this.controls.cameraZ = heroCameraZ;
+          this.controls.cameraY = heroCameraY;
         } else if (scrollY >= maxScroll) {
           this.controls.cameraZ = minCameraZ;
+          this.controls.cameraY = minCameraY;
         } else {
           // Interpolación lineal
-          this.controls.cameraZ = heroCameraZ + (minCameraZ - heroCameraZ) * (scrollY / maxScroll);
+          const progress = scrollY / maxScroll;
+          this.controls.cameraZ = heroCameraZ + (minCameraZ - heroCameraZ) * progress;
+          this.controls.cameraY = heroCameraY + (minCameraY - heroCameraY) * progress;
         }
         this.onControlsChange();
       });
@@ -128,6 +142,11 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (this.renderer && this.renderer.domElement && this.renderer.domElement.parentNode) {
       this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
     }
+  }
+
+  private initGUI(): void {
+    // GUI deshabilitado
+    this.guiInitialized = true;
   }
 
   private getNeonColor(): THREE.Color {
