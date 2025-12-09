@@ -65,6 +65,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private resizeObserver?: ResizeObserver;
 
+  // ✅ throttle para iOS (evita cascadas de resize al hacer scroll con la barra del navegador)
+  private resizeRaf = 0;
+
   controls = {
     bloomStrength: 0.25,
     bloomRadius: 0.8,
@@ -103,7 +106,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.initThree();
     this.initGUI();
 
-    // Desktop: animación entrada + scroll (como antes)
+    // Desktop: animación entrada + scroll
     if (!this.isMobileView) {
       const startZ = 40;
       const endZ = 6.73;
@@ -120,19 +123,29 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       const animateAll = (now: number) => {
         const elapsed = now - startTime;
         if (elapsed < duration) {
-          let t = Math.min(Math.max(elapsed / duration, 0), 1);
+          const t = Math.min(Math.max(elapsed / duration, 0), 1);
           const eased = easeIn(t);
 
           this.controls.cameraZ = startZ + (endZ - startZ) * eased;
-          this.controls.bloomStrength = startBloom + (endBloom - startBloom) * eased;
-          this.controls.exposure = startExposure + (endExposure - startExposure) * eased;
+          this.controls.bloomStrength =
+            startBloom + (endBloom - startBloom) * eased;
+          this.controls.exposure =
+            startExposure + (endExposure - startExposure) * eased;
 
-          const r = Math.round(255 * (startColor.r + (endColor.r - startColor.r) * eased));
-          const g = Math.round(255 * (startColor.g + (endColor.g - startColor.g) * eased));
-          const b = Math.round(255 * (startColor.b + (endColor.b - startColor.b) * eased));
-          this.neonColorHex = `#${r.toString(16).padStart(2, '0')}${g
+          const r = Math.round(
+            255 * (startColor.r + (endColor.r - startColor.r) * eased)
+          );
+          const g = Math.round(
+            255 * (startColor.g + (endColor.g - startColor.g) * eased)
+          );
+          const b = Math.round(
+            255 * (startColor.b + (endColor.b - startColor.b) * eased)
+          );
+          this.neonColorHex = `#${r
             .toString(16)
-            .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+            .padStart(2, '0')}${g
+              .toString(16)
+              .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 
           this.onControlsChange();
           requestAnimationFrame(animateAll);
@@ -173,20 +186,28 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // ✅ SSR guard
     if (!this.isBrowser) return;
 
-    window.removeEventListener('resize', this.onWindowResize, false);
+    // listeners
+    window.removeEventListener('resize', this.requestResize);
+    window.visualViewport?.removeEventListener('resize', this.requestResize);
+    window.visualViewport?.removeEventListener('scroll', this.requestResize);
+
     if (this.scrollHandler) window.removeEventListener('scroll', this.scrollHandler);
 
     this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
+
+    if (this.resizeRaf) cancelAnimationFrame(this.resizeRaf);
+    this.resizeRaf = 0;
 
     cancelAnimationFrame(this.animationFrameId);
 
     if (this.renderer?.domElement?.parentNode) {
       this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
     }
+
+    this.composer?.dispose?.();
     this.renderer?.dispose();
   }
 
@@ -229,20 +250,33 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  // ✅ Medición robusta (evita 0x0 al arrancar en móvil)
+  // ✅ Resize throttled (iOS scroll = visualViewport resize/scroll events)
+  private requestResize = () => {
+    if (this.resizeRaf) return;
+    this.resizeRaf = requestAnimationFrame(() => {
+      this.resizeRaf = 0;
+      this.onWindowResize();
+    });
+  };
+
+  // ✅ Medición robusta iOS: visualViewport durante scroll
   private getContainerSize(): { width: number; height: number } {
     const el = this.rendererContainer.nativeElement;
     const rect = el.getBoundingClientRect();
 
-    // si todavía está en 0, usa viewport
-    const width = Math.max(1, Math.floor(rect.width || window.innerWidth));
-    const height = Math.max(1, Math.floor(rect.height || window.innerHeight));
+    const vv = window.visualViewport;
+    const vw = vv?.width ?? window.innerWidth;
+    const vh = vv?.height ?? window.innerHeight;
+
+    const width = Math.max(1, Math.floor(rect.width || vw));
+    const height = Math.max(1, Math.floor(rect.height || vh));
 
     return { width, height };
   }
 
   private initThree(): void {
     if (!this.isBrowser) return;
+
     const { width, height } = this.getContainerSize();
     this.isMobileView = width < 900;
 
@@ -267,12 +301,21 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+
+    // ✅ cap DPR en iPhone (composer + bloom + dpr alto = context loss al scroll)
+    const dpr = this.isMobileView
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : Math.min(window.devicePixelRatio || 1, 2);
+    this.renderer.setPixelRatio(dpr);
+
     this.renderer.setSize(width, height, false);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = this.controls.exposure;
 
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+
+    // ✅ context loss handlers (por si Safari lo pierde al scroll/resize)
+    this.attachContextLossHandlers();
 
     // Luces
     this.scene.add(new THREE.AmbientLight(0xffffff, this.isMobileView ? 0.25 : 0.1));
@@ -299,14 +342,17 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.composer.addPass(this.bloomPass);
     this.composer.addPass(outputPass);
 
-    window.addEventListener('resize', this.onWindowResize, false);
+    // ✅ iOS: resize “real” al hacer scroll (URL bar)
+    window.addEventListener('resize', this.requestResize, { passive: true });
+    window.visualViewport?.addEventListener('resize', this.requestResize, { passive: true });
+    window.visualViewport?.addEventListener('scroll', this.requestResize, { passive: true });
 
     // ✅ ResizeObserver: cuando el contenedor “coja tamaño real” en móvil, reajusta
-    this.resizeObserver = new ResizeObserver(() => this.onWindowResize());
+    this.resizeObserver = new ResizeObserver(() => this.requestResize());
     this.resizeObserver.observe(this.rendererContainer.nativeElement);
 
-    // ✅ Reintento al siguiente frame (evita el 0x0 al inicio en móvil)
-    requestAnimationFrame(() => this.onWindowResize());
+    // ✅ Reintento al siguiente frame (evita 0x0 al inicio en móvil)
+    requestAnimationFrame(() => this.requestResize());
 
     // Cámara inicial
     this.camera.position.set(this.controls.cameraX, this.controls.cameraY, this.controls.cameraZ);
@@ -332,7 +378,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const distance = (maxDim / 2) / Math.tan(fov / 2);
     const camZ = Math.max(1, distance * margin);
 
-    // evitar clipping
     const neededFar = camZ + maxDim * 4;
     if (this.camera.far < neededFar) this.camera.far = neededFar;
 
@@ -370,7 +415,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     if (this.modelRoot) {
       if (this.isMobileView) {
-        // En mobile, fuerza la rotación Y a 0 para que el logo salga recto
         this.modelRoot.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
         this.modelRoot.rotation.y = 0;
         this.modelRoot.rotation.z = THREE.MathUtils.degToRad(this.controls.rotationZ);
@@ -423,26 +467,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.applyNeonColor();
         this.applyEmissiveIntensity(this.controls.baseEmissive);
 
-        // ✅ Mobile: encuadre perfecto al cargar
         if (this.isMobileView) {
           // Centra el modelo en el origen
-          const box = new THREE.Box3().setFromObject(this.modelRoot);
-          const center = box.getCenter(new THREE.Vector3());
-          this.modelRoot.position.sub(center);
+          const box2 = new THREE.Box3().setFromObject(this.modelRoot);
+          const center2 = box2.getCenter(new THREE.Vector3());
+          this.modelRoot.position.sub(center2);
 
           // Resetea rotaciones para que el logo salga recto
           this.modelRoot.rotation.set(0, 0, 0);
 
-          // Sube el logo en Y para que quede más arriba en mobile
-          this.modelRoot.position.y += box.getSize(new THREE.Vector3()).y * 2.6;
-          this.modelRoot.position.x += box.getSize(new THREE.Vector3()).x * -1.08;
+          // Ajuste de posición (tu setup)
+          const size = box2.getSize(new THREE.Vector3());
+          this.modelRoot.position.y += size.y * 2.6;
+          this.modelRoot.position.x += size.x * -1.08;
 
-          // Aleja la cámara en mobile con margen 7
+          // Aleja cámara con margen (tu setup)
           this.fitCameraToObject(this.modelRoot, 7);
           this.onControlsChange();
         } else {
           this.modelRoot.position.y = this.modelRoot.position.y + 0.5;
-
         }
 
         onDone?.();
@@ -472,15 +515,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private onWindowResize = () => {
-    if (!this.isBrowser) return; // ✅ SSR guard
-    if (!this.camera || !this.renderer || !this.composer) return;
+    if (!this.isBrowser) return;
     if (!this.camera || !this.renderer || !this.composer) return;
 
     const { width, height } = this.getContainerSize();
     const prevMobile = this.isMobileView;
     this.isMobileView = width < 900;
 
-    // si entramos en mobile, asegura exposure visible
+    // ✅ cap DPR también aquí (iOS puede cambiar viewport en scroll)
+    const dpr = this.isMobileView
+      ? Math.min(window.devicePixelRatio || 1, 1.5)
+      : Math.min(window.devicePixelRatio || 1, 2);
+    this.renderer.setPixelRatio(dpr);
+
     if (this.isMobileView && this.controls.exposure <= 0) this.controls.exposure = 1.35;
 
     this.camera.aspect = width / height;
@@ -494,10 +541,35 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.fitCameraToObject(this.modelRoot, 1.35);
     }
 
-    // si venimos de desktop y entramos en mobile, cancela scroll (por si acaso)
+    // si venimos de desktop y entramos en mobile, cancela scroll
     if (!prevMobile && this.isMobileView && this.scrollHandler) {
       window.removeEventListener('scroll', this.scrollHandler);
       this.scrollHandler = undefined;
     }
   };
+
+  private attachContextLossHandlers(): void {
+    const canvas = this.renderer.domElement;
+
+    canvas.addEventListener(
+      'webglcontextlost',
+      (e: Event) => {
+        e.preventDefault();
+        cancelAnimationFrame(this.animationFrameId);
+        console.warn('⚠️ WebGL context lost (iOS/Safari).');
+      },
+      false
+    );
+
+    canvas.addEventListener(
+      'webglcontextrestored',
+      () => {
+        console.warn('✅ WebGL context restored.');
+        // Reanuda el loop y fuerza resize para reestablecer targets del composer
+        this.requestResize();
+        this.ngZone.runOutsideAngular(() => this.animate());
+      },
+      false
+    );
+  }
 }
