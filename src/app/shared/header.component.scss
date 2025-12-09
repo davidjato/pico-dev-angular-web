@@ -186,7 +186,7 @@
 }
 
 .nav-links a {
-    font-size: 4rem;
+    font-size: 0.8rem;
     font-weight: 500;
     text-transform: uppercase;
     text-decoration: none;
@@ -196,6 +196,10 @@
     width: 100%;
     text-align: right;
     padding-right: 1rem;
+
+    @media (max-width: 900px) {
+        font-size: 4rem;
+    }
 }
 
 .nav-links a:hover,
@@ -227,12 +231,16 @@
     background: transparent;
     padding: 0;
     margin: 0;
-    font-size: 2rem;
+    font-size: 0.7rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #777;
     cursor: pointer;
     transition: color 0.2s ease;
+
+    @media (max-width: 900px) {
+        font-size: 2rem;
+    }
 }
 
 .lang-switcher button:hover,
