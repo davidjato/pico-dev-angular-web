@@ -31,28 +31,6 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
-
-  // Llamar este método desde la UI cuando cambie cualquier control
-  onControlsChange(): void {
-    // Actualizar bloom y exposición
-    if (this.renderer) {
-      this.renderer.toneMappingExposure = this.controls.exposure;
-    }
-    if (this.bloomPass) {
-      this.bloomPass.strength = this.controls.bloomStrength;
-      this.bloomPass.radius = this.controls.bloomRadius;
-      this.bloomPass.threshold = this.controls.bloomThreshold;
-    }
-    // Actualizar color neón
-    this.applyNeonColor();
-    // Actualizar intensidad emisiva
-    this.applyEmissiveIntensity(this.controls.baseEmissive);
-    // Forzar render inmediato si es necesario
-    if (this.composer) {
-      this.composer.render();
-    }
-  }
-
   neonColorHex = '#FF7A00';
   private guiService = inject(GuiControlsService);
   private guiInitialized = false;
@@ -64,113 +42,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  ngAfterViewInit(): void {
-    if (this.isBrowser) {
-      this.initThree();
-      this.initGUI();
-
-      // Animación de entrada inicial
-      const startZ = 40;
-      const endZ = 6.73;
-      const startColor = { r: 0.0196, g: 0.0196, b: 0.0196 }; // #050505
-      const endColor = { r: 1, g: 0.47843, b: 0 }; // #FF7A00
-      const startBloom = 0;
-      const endBloom = 0.21;
-      const startExposure = 0;
-      const endExposure = 1.47;
-      const duration = 1000; // ms
-      const startTime = performance.now();
-      const easeIn = (t: number) => t * t;
-      const animateAll = (now: number) => {
-        const elapsed = now - startTime;
-        if (elapsed < duration) {
-          let t = elapsed / duration;
-          t = Math.min(Math.max(t, 0), 1);
-          const eased = easeIn(t);
-          this.controls.cameraZ = startZ + (endZ - startZ) * eased;
-          this.controls.bloomStrength = startBloom + (endBloom - startBloom) * eased;
-          this.controls.exposure = startExposure + (endExposure - startExposure) * eased;
-          const r = Math.round(255 * (startColor.r + (endColor.r - startColor.r) * eased));
-          const g = Math.round(255 * (startColor.g + (endColor.g - startColor.g) * eased));
-          const b = Math.round(255 * (startColor.b + (endColor.b - startColor.b) * eased));
-          this.neonColorHex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-          this.onControlsChange();
-          requestAnimationFrame(animateAll);
-        } else {
-          this.controls.cameraZ = endZ;
-          this.controls.bloomStrength = endBloom;
-          this.controls.exposure = endExposure;
-          this.neonColorHex = '#FF7A00';
-          this.onControlsChange();
-        }
-      };
-      requestAnimationFrame(animateAll);
-
-      // Efecto scroll: cameraZ va de 6.73 (hero) a 0 (scroll máximo), vuelve a 6.73 al volver arriba
-      // cameraY va de su valor inicial a -2.2
-      const heroCameraZ = endZ;
-      const heroCameraY = this.controls.cameraY;
-      const minCameraZ = 0;
-      const minCameraY = -2.2;
-      const maxScroll = 400; // px para llegar a cameraZ=0
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (scrollY <= 0) {
-          this.controls.cameraZ = heroCameraZ;
-          this.controls.cameraY = heroCameraY;
-        } else if (scrollY >= maxScroll) {
-          this.controls.cameraZ = minCameraZ;
-          this.controls.cameraY = minCameraY;
-        } else {
-          // Interpolación lineal
-          const progress = scrollY / maxScroll;
-          this.controls.cameraZ = heroCameraZ + (minCameraZ - heroCameraZ) * progress;
-          this.controls.cameraY = heroCameraY + (minCameraY - heroCameraY) * progress;
-        }
-        this.onControlsChange();
-      });
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', this.onWindowResize, false);
-    }
-    if (typeof cancelAnimationFrame !== 'undefined') {
-      cancelAnimationFrame(this.animationFrameId);
-    }
-    if (this.renderer && this.renderer.domElement && this.renderer.domElement.parentNode) {
-      this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
-    }
-  }
-
-  private initGUI(): void {
-    // GUI deshabilitado
-    this.guiInitialized = true;
-  }
-
-  private getNeonColor(): THREE.Color {
-    return new THREE.Color(this.neonColorHex);
-  }
-
-  applyNeonColor(): void {
-    const color = this.getNeonColor();
-    const root = this.modelRoot ?? this.debugObject;
-    if (!root) return;
-    root.traverse((obj: any) => {
-      if (obj.isMesh && obj.material) {
-        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-        mats.forEach((mat: any) => {
-          if (!mat) return;
-          if (!mat.emissive) mat.emissive = new THREE.Color();
-          mat.emissive.copy(color);
-        });
-      }
-    });
-    if (this.glowLight) {
-      this.glowLight.color = color;
-    }
-  }
   @ViewChild('rendererContainer', { static: true })
   rendererContainer!: ElementRef<HTMLDivElement>;
 
@@ -184,75 +55,216 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private animationFrameId = 0;
 
   private modelRoot?: THREE.Object3D;
-  private debugObject?: THREE.Object3D;
   private glowLight?: THREE.PointLight;
 
   isBlinking = false;
   private isBrowser: boolean;
 
-  // 👇 TUS VALORES POR DEFECTO (copiados del JSON que has enviado)
+  private isMobileView = false;
+  private scrollHandler?: () => void;
+
+  private resizeObserver?: ResizeObserver;
 
   controls = {
     bloomStrength: 0.25,
     bloomRadius: 0.8,
     bloomThreshold: 0,
-    exposure: 0, // INICIALIZA EN 0
-    rotationSpeed: 0, // ahora mismo no se usa, pero lo dejamos por si luego quieres auto-rotación
+    exposure: 0, // desktop lo anima; mobile lo forzamos
+    rotationSpeed: 0,
     baseEmissive: 8,
     blinkSpeed: 10,
     blinkAmount: 2,
     cameraX: 2.7,
     cameraY: -0.3,
-    cameraZ: 40, // INICIALIZA EN 40
-    cameraRotX: 5,   // grados
-    cameraRotY: -2,  // grados
-    cameraRotZ: 0,   // grados
+    cameraZ: 40,
+    cameraRotX: 5,
+    cameraRotY: -2,
+    cameraRotZ: 0,
     rotationX: 0,
     rotationY: 36,
     rotationZ: 0,
   };
 
-  private applyEmissiveIntensity(intensity: number): void {
-    const target = this.modelRoot ?? this.debugObject;
-    if (!target) return;
+  onControlsChange(): void {
+    if (this.renderer) this.renderer.toneMappingExposure = this.controls.exposure;
+    if (this.bloomPass) {
+      this.bloomPass.strength = this.controls.bloomStrength;
+      this.bloomPass.radius = this.controls.bloomRadius;
+      this.bloomPass.threshold = this.controls.bloomThreshold;
+    }
+    this.applyNeonColor();
+    this.applyEmissiveIntensity(this.controls.baseEmissive);
+    this.composer?.render();
+  }
 
-    target.traverse((obj: any) => {
+  ngAfterViewInit(): void {
+    if (!this.isBrowser) return;
+
+    this.initThree();
+    this.initGUI();
+
+    // Desktop: animación entrada + scroll (como antes)
+    if (!this.isMobileView) {
+      const startZ = 40;
+      const endZ = 6.73;
+      const startColor = { r: 0.0196, g: 0.0196, b: 0.0196 };
+      const endColor = { r: 1, g: 0.47843, b: 0 };
+      const startBloom = 0;
+      const endBloom = 0.21;
+      const startExposure = 0;
+      const endExposure = 1.47;
+      const duration = 1000;
+      const startTime = performance.now();
+      const easeIn = (t: number) => t * t;
+
+      const animateAll = (now: number) => {
+        const elapsed = now - startTime;
+        if (elapsed < duration) {
+          let t = Math.min(Math.max(elapsed / duration, 0), 1);
+          const eased = easeIn(t);
+
+          this.controls.cameraZ = startZ + (endZ - startZ) * eased;
+          this.controls.bloomStrength = startBloom + (endBloom - startBloom) * eased;
+          this.controls.exposure = startExposure + (endExposure - startExposure) * eased;
+
+          const r = Math.round(255 * (startColor.r + (endColor.r - startColor.r) * eased));
+          const g = Math.round(255 * (startColor.g + (endColor.g - startColor.g) * eased));
+          const b = Math.round(255 * (startColor.b + (endColor.b - startColor.b) * eased));
+          this.neonColorHex = `#${r.toString(16).padStart(2, '0')}${g
+            .toString(16)
+            .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+          this.onControlsChange();
+          requestAnimationFrame(animateAll);
+        } else {
+          this.controls.cameraZ = endZ;
+          this.controls.bloomStrength = endBloom;
+          this.controls.exposure = endExposure;
+          this.neonColorHex = '#FF7A00';
+          this.onControlsChange();
+        }
+      };
+      requestAnimationFrame(animateAll);
+
+      const heroCameraZ = endZ;
+      const heroCameraY = this.controls.cameraY;
+      const minCameraZ = 0;
+      const minCameraY = -2.2;
+      const maxScroll = 400;
+
+      this.scrollHandler = () => {
+        const scrollY = window.scrollY;
+        if (scrollY <= 0) {
+          this.controls.cameraZ = heroCameraZ;
+          this.controls.cameraY = heroCameraY;
+        } else if (scrollY >= maxScroll) {
+          this.controls.cameraZ = minCameraZ;
+          this.controls.cameraY = minCameraY;
+        } else {
+          const p = scrollY / maxScroll;
+          this.controls.cameraZ = heroCameraZ + (minCameraZ - heroCameraZ) * p;
+          this.controls.cameraY = heroCameraY + (minCameraY - heroCameraY) * p;
+        }
+        this.onControlsChange();
+      };
+
+      window.addEventListener('scroll', this.scrollHandler, { passive: true });
+    }
+  }
+
+  ngOnDestroy(): void {
+    // ✅ SSR guard
+    if (!this.isBrowser) return;
+
+    window.removeEventListener('resize', this.onWindowResize, false);
+    if (this.scrollHandler) window.removeEventListener('scroll', this.scrollHandler);
+
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = undefined;
+
+    cancelAnimationFrame(this.animationFrameId);
+
+    if (this.renderer?.domElement?.parentNode) {
+      this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
+    }
+    this.renderer?.dispose();
+  }
+
+  private initGUI(): void {
+    this.guiInitialized = true;
+  }
+
+  private getNeonColor(): THREE.Color {
+    return new THREE.Color(this.neonColorHex);
+  }
+
+  private applyNeonColor(): void {
+    const color = this.getNeonColor();
+    if (!this.modelRoot) return;
+
+    this.modelRoot.traverse((obj: any) => {
       if (obj.isMesh && obj.material) {
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
         mats.forEach((mat: any) => {
-          if (mat && 'emissiveIntensity' in mat) {
-            mat.emissiveIntensity = intensity;
-          }
+          if (!mat) return;
+          if (!mat.emissive) mat.emissive = new THREE.Color();
+          mat.emissive.copy(color);
+        });
+      }
+    });
+
+    if (this.glowLight) this.glowLight.color = color;
+  }
+
+  private applyEmissiveIntensity(intensity: number): void {
+    if (!this.modelRoot) return;
+
+    this.modelRoot.traverse((obj: any) => {
+      if (obj.isMesh && obj.material) {
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        mats.forEach((mat: any) => {
+          if (mat && 'emissiveIntensity' in mat) mat.emissiveIntensity = intensity;
         });
       }
     });
   }
 
-  // ---------------------------------------------------------------------------
-  // Inicialización Three
-  // ---------------------------------------------------------------------------
+  // ✅ Medición robusta (evita 0x0 al arrancar en móvil)
+  private getContainerSize(): { width: number; height: number } {
+    const el = this.rendererContainer.nativeElement;
+    const rect = el.getBoundingClientRect();
+
+    // si todavía está en 0, usa viewport
+    const width = Math.max(1, Math.floor(rect.width || window.innerWidth));
+    const height = Math.max(1, Math.floor(rect.height || window.innerHeight));
+
+    return { width, height };
+  }
 
   private initThree(): void {
-    const container = this.rendererContainer.nativeElement;
-    const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || window.innerHeight;
+    if (!this.isBrowser) return;
+    const { width, height } = this.getContainerSize();
+    this.isMobileView = width < 900;
+
+    // ✅ Mobile: valores visibles SIEMPRE (no dependas de la animación)
+    if (this.isMobileView) {
+      this.controls.exposure = 1.35;
+      this.controls.bloomStrength = 0.21;
+      this.controls.bloomRadius = 0.8;
+      this.controls.bloomThreshold = 0;
+
+      this.controls.cameraX = 0;
+      this.controls.cameraY = 0;
+      this.controls.cameraZ = 16;
+      this.controls.cameraRotX = 0;
+      this.controls.cameraRotY = 0;
+      this.controls.cameraRotZ = 0;
+    }
 
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
 
-    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-
-    // 👉 Posición + rotación inicial de la cámara según tus valores
-    this.camera.position.set(
-      this.controls.cameraX,
-      this.controls.cameraY,
-      this.controls.cameraZ
-    );
-    this.camera.rotation.set(
-      THREE.MathUtils.degToRad(this.controls.cameraRotX),
-      THREE.MathUtils.degToRad(this.controls.cameraRotY),
-      THREE.MathUtils.degToRad(this.controls.cameraRotZ)
-    );
+    this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 200);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -260,24 +272,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = this.controls.exposure;
 
-    container.appendChild(this.renderer.domElement);
+    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
 
-    // Luces suaves
-    const ambient = new THREE.AmbientLight(0xffffff, 0.1);
-    this.scene.add(ambient);
-
+    // Luces
+    this.scene.add(new THREE.AmbientLight(0xffffff, this.isMobileView ? 0.25 : 0.1));
     const fill = new THREE.DirectionalLight(0xffffff, 0.1);
     fill.position.set(2, 4, 2);
     this.scene.add(fill);
 
-    // Luz de glow que sigue al logo
     this.glowLight = new THREE.PointLight(this.getNeonColor(), 30, 10, 2);
     this.glowLight.position.set(0, 0.5, 0);
     this.scene.add(this.glowLight);
 
-    // No añadir geometría de debug: solo mostrar el modelo GLB si carga correctamente
-
-    // Postprocesado (bloom)
+    // Postprocesado
     const renderScene = new RenderPass(this.scene, this.camera);
     this.bloomPass = new UnrealBloomPass(
       new THREE.Vector2(width, height),
@@ -292,19 +299,51 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.composer.addPass(this.bloomPass);
     this.composer.addPass(outputPass);
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('resize', this.onWindowResize, false);
+
+    // ✅ ResizeObserver: cuando el contenedor “coja tamaño real” en móvil, reajusta
+    this.resizeObserver = new ResizeObserver(() => this.onWindowResize());
+    this.resizeObserver.observe(this.rendererContainer.nativeElement);
+
+    // ✅ Reintento al siguiente frame (evita el 0x0 al inicio en móvil)
+    requestAnimationFrame(() => this.onWindowResize());
+
+    // Cámara inicial
+    this.camera.position.set(this.controls.cameraX, this.controls.cameraY, this.controls.cameraZ);
+    if (this.isMobileView) this.camera.lookAt(0, 0, 0);
+    else {
+      this.camera.rotation.set(
+        THREE.MathUtils.degToRad(this.controls.cameraRotX),
+        THREE.MathUtils.degToRad(this.controls.cameraRotY),
+        THREE.MathUtils.degToRad(this.controls.cameraRotZ)
+      );
     }
 
-    // Cargar logo por defecto desde assets
     this.loadModelFromUrl('assets/threejs/logo.glb');
-
     this.ngZone.runOutsideAngular(() => this.animate());
   }
 
-  // ---------------------------------------------------------------------------
-  // Animación
-  // ---------------------------------------------------------------------------
+  private fitCameraToObject(object: THREE.Object3D, margin = 1.35): void {
+    const box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+
+    const fov = this.camera.fov * (Math.PI / 180);
+    const distance = (maxDim / 2) / Math.tan(fov / 2);
+    const camZ = Math.max(1, distance * margin);
+
+    // evitar clipping
+    const neededFar = camZ + maxDim * 4;
+    if (this.camera.far < neededFar) this.camera.far = neededFar;
+
+    this.controls.cameraX = 0;
+    this.controls.cameraY = 0;
+    this.controls.cameraZ = camZ;
+
+    this.camera.position.set(0, 0, camZ);
+    this.camera.lookAt(0, 0, 0);
+    this.camera.updateProjectionMatrix();
+  }
 
   private animate = () => {
     if (!this.isBrowser) return;
@@ -312,173 +351,153 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const elapsed = this.clock.getElapsedTime();
     this.clock.getDelta();
 
-    // Cámara: mantiene siempre tus valores (no hay UI que los cambie, pero así queda por si quieres modificarlos en código)
-    this.camera.position.set(
-      this.controls.cameraX,
-      this.controls.cameraY,
-      this.controls.cameraZ
-    );
-    this.camera.rotation.set(
-      THREE.MathUtils.degToRad(this.controls.cameraRotX),
-      THREE.MathUtils.degToRad(this.controls.cameraRotY),
-      THREE.MathUtils.degToRad(this.controls.cameraRotZ)
-    );
+    this.camera.position.set(this.controls.cameraX, this.controls.cameraY, this.controls.cameraZ);
 
-    // Bloom + exposición desde tus defaults
+    if (this.isMobileView) {
+      this.camera.lookAt(0, 0, 0);
+    } else {
+      this.camera.rotation.set(
+        THREE.MathUtils.degToRad(this.controls.cameraRotX),
+        THREE.MathUtils.degToRad(this.controls.cameraRotY),
+        THREE.MathUtils.degToRad(this.controls.cameraRotZ)
+      );
+    }
+
     this.renderer.toneMappingExposure = this.controls.exposure;
     this.bloomPass.strength = this.controls.bloomStrength;
     this.bloomPass.radius = this.controls.bloomRadius;
     this.bloomPass.threshold = this.controls.bloomThreshold;
 
-    const target = this.modelRoot ?? this.debugObject;
-
-    if (target) {
-      // Rotación manual del logo (defaults: rotY = 36)
-      target.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
-      target.rotation.y = THREE.MathUtils.degToRad(this.controls.rotationY);
-      target.rotation.z = THREE.MathUtils.degToRad(this.controls.rotationZ);
+    if (this.modelRoot) {
+      if (this.isMobileView) {
+        // En mobile, fuerza la rotación Y a 0 para que el logo salga recto
+        this.modelRoot.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
+        this.modelRoot.rotation.y = 0;
+        this.modelRoot.rotation.z = THREE.MathUtils.degToRad(this.controls.rotationZ);
+      } else {
+        this.modelRoot.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
+        this.modelRoot.rotation.y = THREE.MathUtils.degToRad(this.controls.rotationY);
+        this.modelRoot.rotation.z = THREE.MathUtils.degToRad(this.controls.rotationZ);
+      }
     }
 
-    // Luz de glow sigue el logo
-    if (this.glowLight && target) {
+    if (this.glowLight && this.modelRoot) {
       const pos = new THREE.Vector3();
-      target.getWorldPosition(pos);
+      this.modelRoot.getWorldPosition(pos);
       this.glowLight.position.lerp(pos, 0.3);
       this.glowLight.intensity = 30;
     }
 
-    // Parpadeo (si está activado)
-    if (this.isBlinking && target) {
-      const blink =
-        (Math.sin(elapsed * this.controls.blinkSpeed) + 1) / 2;
-      const intensity =
-        this.controls.baseEmissive + blink * this.controls.blinkAmount * 4;
+    if (this.isBlinking && this.modelRoot) {
+      const blink = (Math.sin(elapsed * this.controls.blinkSpeed) + 1) / 2;
+      const intensity = this.controls.baseEmissive + blink * this.controls.blinkAmount * 4;
       this.applyEmissiveIntensity(intensity);
-
-      this.bloomPass.strength =
-        this.controls.bloomStrength + blink * this.controls.blinkAmount;
+      this.bloomPass.strength = this.controls.bloomStrength + blink * this.controls.blinkAmount;
     } else {
       this.applyEmissiveIntensity(this.controls.baseEmissive);
     }
 
     this.composer.render();
-
-    if (typeof requestAnimationFrame !== 'undefined') {
-      this.animationFrameId = requestAnimationFrame(this.animate);
-    }
+    this.animationFrameId = requestAnimationFrame(this.animate);
   };
 
-  // ---------------------------------------------------------------------------
-  // Carga del GLB
-  // ---------------------------------------------------------------------------
-
-  onModelFileSelected(event: Event): void {
-    if (!this.isBrowser) return;
-
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-
-    const file = input.files[0];
-    const url = URL.createObjectURL(file);
-    console.log('📦 Cargando GLB desde URL local:', url);
-
-    this.loadModelFromUrl(url, () => URL.revokeObjectURL(url));
-  }
-
   private loadModelFromUrl(url: string, onDone?: () => void): void {
-    if (!this.scene) return;
-
     const loader = new GLTFLoader();
 
     loader.load(
       url,
       (gltf) => {
-        console.log('✅ GLB cargado:', gltf);
-
         if (this.modelRoot) this.scene.remove(this.modelRoot);
-        if (this.debugObject) {
-          this.scene.remove(this.debugObject);
-          this.debugObject = undefined;
-        }
 
         this.modelRoot = gltf.scene;
+
+        // centrar en origen
+        const box = new THREE.Box3().setFromObject(this.modelRoot);
+        const center = box.getCenter(new THREE.Vector3());
+        this.modelRoot.position.sub(center);
+
         this.scene.add(this.modelRoot);
 
-        // Adaptar materiales existentes al look neón
+        // neón
         this.applyNeonToExistingMaterials(this.modelRoot);
         this.applyNeonColor();
         this.applyEmissiveIntensity(this.controls.baseEmissive);
 
-        if (onDone) onDone();
-      },
-      (progress) => {
-        if (progress.total) {
-          const pct = (progress.loaded / progress.total) * 100;
-          console.log(`⏳ Cargando GLB: ${pct.toFixed(1)}%`);
+        // ✅ Mobile: encuadre perfecto al cargar
+        if (this.isMobileView) {
+          // Centra el modelo en el origen
+          const box = new THREE.Box3().setFromObject(this.modelRoot);
+          const center = box.getCenter(new THREE.Vector3());
+          this.modelRoot.position.sub(center);
+
+          // Resetea rotaciones para que el logo salga recto
+          this.modelRoot.rotation.set(0, 0, 0);
+
+          // Sube el logo en Y para que quede más arriba en mobile
+          this.modelRoot.position.y += box.getSize(new THREE.Vector3()).y * 2.6;
+          this.modelRoot.position.x += box.getSize(new THREE.Vector3()).x * -1.08;
+
+          // Aleja la cámara en mobile con margen 7
+          this.fitCameraToObject(this.modelRoot, 7);
+          this.onControlsChange();
+        } else {
+          this.modelRoot.position.y = this.modelRoot.position.y + 0.5;
+
         }
+
+        onDone?.();
       },
+      undefined,
       (error) => {
         console.error('❌ Error al cargar GLB:', error);
-        if (onDone) onDone();
+        onDone?.();
       }
     );
   }
 
   private applyNeonToExistingMaterials(root: THREE.Object3D): void {
     const neon = this.getNeonColor();
-    let meshCount = 0;
-
     root.traverse((obj: any) => {
       if (obj.isMesh && obj.material) {
-        meshCount++;
         const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
-
         mats.forEach((mat: any) => {
           if (!mat) return;
-
-          if (!mat.emissive) {
-            mat.emissive = neon.clone();
-          } else {
-            mat.emissive.copy(neon);
-          }
+          if (!mat.emissive) mat.emissive = neon.clone();
+          else mat.emissive.copy(neon);
           mat.emissiveIntensity = this.controls.baseEmissive;
           mat.needsUpdate = true;
         });
       }
     });
-
-    console.log('🧩 Meshes en el modelo:', meshCount);
   }
-
-  // ---------------------------------------------------------------------------
-  // UI
-  // ---------------------------------------------------------------------------
-
-  toggleBlink(): void {
-    this.isBlinking = !this.isBlinking;
-
-    if (!this.isBlinking) {
-      this.applyEmissiveIntensity(this.controls.baseEmissive);
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Resize
-  // ---------------------------------------------------------------------------
 
   private onWindowResize = () => {
-    if (!this.isBrowser || !this.camera || !this.renderer || !this.composer) {
-      return;
-    }
+    if (!this.isBrowser) return; // ✅ SSR guard
+    if (!this.camera || !this.renderer || !this.composer) return;
+    if (!this.camera || !this.renderer || !this.composer) return;
 
-    const container = this.rendererContainer.nativeElement;
-    const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || window.innerHeight;
+    const { width, height } = this.getContainerSize();
+    const prevMobile = this.isMobileView;
+    this.isMobileView = width < 900;
+
+    // si entramos en mobile, asegura exposure visible
+    if (this.isMobileView && this.controls.exposure <= 0) this.controls.exposure = 1.35;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(width, height, false);
     this.composer.setSize(width, height);
+
+    // si estamos en mobile y ya hay modelo, re-encuadra
+    if (this.isMobileView && this.modelRoot) {
+      this.fitCameraToObject(this.modelRoot, 1.35);
+    }
+
+    // si venimos de desktop y entramos en mobile, cancela scroll (por si acaso)
+    if (!prevMobile && this.isMobileView && this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler);
+      this.scrollHandler = undefined;
+    }
   };
 }

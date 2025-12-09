@@ -13,6 +13,7 @@
   height: 100%;
   z-index: 1;
   display: block;
+  pointer-events: none;
 }
 
 .blur-overlay {
@@ -152,8 +153,24 @@
 }
 
 @media (max-width: 900px) {
+  .feature-section {
+    min-height: 50vh !important;
+    height: auto !important;
+    padding-top: 4vh;
+    padding-bottom: 4vh;
+  }
+
   .points-list {
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 4rem;
+    row-gap: 2rem;
+  }
+
+  .point-item.inactive {
+    opacity: 0.35;
+    filter: brightness(0.6);
+    transition: opacity 0.3s, filter 0.3s;
   }
 
   .point-number {

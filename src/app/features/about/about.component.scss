@@ -1,78 +1,281 @@
-.feature-section {
+/* ==========================================================================
+   FEATURE / ABOUT SECTION (SCSS)
+   Objetivo: Desktop (lista izquierda + texto derecha) / Mobile (carrusel centrado)
+   Sin duplicados, con colores forzados dentro del scope de la sección.
+   ========================================================================== */
 
+/* Variables (puedes moverlas a un _variables.scss si usas arquitectura) */
+$bg: #000;
+$text: #fff;
+$accent: #ff7a00;
+
+$bp-mobile: 900px;
+
+/* Opcional (solo si quieres aislarlo aún más en Angular) */
+// :host {
+//   display: block;
+// }
+
+/* --------------------------------------------------------------------------
+   Scope principal
+   -------------------------------------------------------------------------- */
+.feature-section {
+  background: $bg;
+  color: $text; // clave: herencia de color dentro de la sección
   position: relative;
   overflow: hidden;
+
   display: flex;
-  padding: 4rem;
+  gap: clamp(24px, 3vw, 64px);
+  padding: clamp(32px, 4vw, 80px);
+  box-sizing: border-box;
+
+  /* Base Tipografías */
+  .menu-number,
+  .menu-title,
+  .about-content-text,
+  .carousel-option {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+  }
+
+  /* ------------------------------------------------------------------------
+     Layout base
+     ------------------------------------------------------------------------ */
+  .about-menu {
+    background: transparent;
+    position: relative;
+    display: flex;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    li {
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1;
+    }
+  }
+
+  .menu-number {
+    color: $accent;
+  }
+
+  .menu-title {
+    color: $text;
+    text-transform: uppercase;
+  }
+
+  .about-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .about-content-text {
+    color: $text;
+    font-weight: 300;
+    line-height: 1.45;
+  }
+
+  /* ------------------------------------------------------------------------
+     Helpers para mostrar/ocultar por breakpoint (sin depender de isMobileView)
+     ------------------------------------------------------------------------ */
+  .only-mobile {
+    display: none;
+  }
+
+  .only-desktop {
+    display: block;
+  }
+
+  /* ------------------------------------------------------------------------
+     DESKTOP (>= 901px)
+     ------------------------------------------------------------------------ */
+  @media (min-width: #{$bp-mobile + 1}) {
+    .about-menu {
+      flex: 0 0 32%;
+      max-width: 520px;
+      align-items: flex-start;
+      justify-content: flex-start;
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(18px, 2.2vh, 28px);
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+
+      li {
+        padding-left: 3.5rem; // espacio para número absoluto
+
+        &.selected {
+          .menu-title {
+            color: $accent;
+          }
+        }
+      }
+    }
+
+    .menu-number {
+      position: absolute;
+      left: 0;
+      top: 0.15em;
+      width: 2.8rem;
+      text-align: right;
+      font-size: clamp(14px, 1.2vw, 18px);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }
+
+    .menu-title {
+      display: inline-block;
+      font-size: clamp(56px, 5vw, 110px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.92;
+    }
+
+    .about-content {
+      flex: 1;
+      padding-left: 0;
+    }
+
+    .about-content-text {
+      font-size: clamp(18px, 2vw, 28px);
+      max-width: 48ch;
+      margin-top: 0.4rem;
+    }
+
+    /* Desktop: carrusel fuera */
+    .carousel-touch-area {
+      display: none;
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     MOBILE (<= 900px)
+     ------------------------------------------------------------------------ */
+  @media (max-width: $bp-mobile) {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    padding: 40px 16px;
+    width: 100%;
+
+    .only-mobile {
+      display: flex;
+    }
+
+    .only-desktop {
+      display: none;
+    }
+
+    /* Ocultamos la lista en mobile */
+    .about-menu {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+
+      ul {
+        display: none;
+      }
+    }
+
+    /* Carrusel */
+    .carousel-touch-area {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      touch-action: pan-x;
+    }
+
+    .carousel-arrow {
+      background: none;
+      border: 0;
+      color: $accent;
+      font-size: 2.2rem;
+      padding: 12px;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0.85;
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+    }
+
+    .carousel-slide {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Importante para el look de tu captura: número arriba / título abajo */
+    .carousel-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 120px;
+      color: $text;
+    }
+
+    .carousel-option .menu-number {
+      position: static;
+      transform: none;
+      margin: 0;
+      font-size: clamp(22px, 6vw, 34px);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: $accent;
+    }
+
+    .carousel-option .menu-title {
+      font-size: clamp(44px, 12vw, 64px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: $text;
+    }
+
+    .about-content {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding-left: 0;
+    }
+
+    .about-content-text {
+      width: 100%;
+      max-width: 36ch;
+      font-size: clamp(16px, 4.2vw, 20px);
+      margin-top: 18px;
+      text-align: center;
+    }
+  }
 }
 
-.about-menu {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  background: transparent;
-  position: relative;
-}
-
-.about-menu ul {
-  width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 100%;
-}
-
-.about-menu li {
-  font-family: 'Roboto', sans-serif;
-  font-size: 6vw;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  margin-bottom: 2vh;
-  transition: color 0.2s, text-decoration 0.2s;
-  line-height: 1;
-  user-select: none;
-  text-align: left;
-  position: relative;
-}
-
-.about-menu li.selected {
-  color: #FF7A00;
-  text-decoration: none;
-}
-
-.menu-number {
-  position: absolute;
-  left: -2vw;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1vw;
-  font-weight: 400;
-  color: #FF7A00;
-  margin: 0;
-  vertical-align: middle;
-}
-
-.about-content {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 3vw;
-}
-
-.about-content-text {
-  font-family: 'Roboto', sans-serif;
-  font-size: 2vw;
-  font-weight: 100;
-  color: #fff;
-  max-width: 80%;
-  margin-top: 0.5vh;
-}
+/* --------------------------------------------------------------------------
+   DEBUG (opcional) - descomenta si necesitas ver cajas/colores en dev
+   -------------------------------------------------------------------------- */
+// .feature-section * {
+//   outline: 1px solid cyan;
+// }
+// .feature-section * {
+//   color: magenta !important;
+// }

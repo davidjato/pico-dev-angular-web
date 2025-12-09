@@ -31,25 +31,25 @@ export class ComingSoonComponent implements AfterViewInit, OnDestroy {
     this.countdown3D = new ComingSoonCountdown3D({
       container: this.canvasContainer.nativeElement
     });
-    
+
     // Usar setTimeout para asegurar que el DOM está listo
     setTimeout(() => {
       // Animación scroll frases
       this.scrollTopEl = document.querySelector('.scroll-phrase-top') as HTMLElement;
       this.scrollBottomEl = document.querySelector('.scroll-phrase-bottom') as HTMLElement;
-      
+
       console.log('Elements found:', {
         top: !!this.scrollTopEl,
         bottom: !!this.scrollBottomEl
       });
-      
+
       const updatePhrases = () => {
         const section = document.querySelector('.coming-soon-root') as HTMLElement;
         if (!section) return;
-        
+
         const scrollY = window.scrollY || window.pageYOffset;
         const viewportHeight = window.innerHeight;
-        
+
         // Calcular offset de la sección en el documento
         let sectionTop = 0;
         let element: HTMLElement | null = section;
@@ -57,32 +57,39 @@ export class ComingSoonComponent implements AfterViewInit, OnDestroy {
           sectionTop += element.offsetTop;
           element = element.offsetParent as HTMLElement | null;
         }
-        
+        const isMobile = window.innerWidth <= 900;
+        const heightScrollTopPhrase = isMobile ? 2.5 : 2.8;
+        const heightScrollBottomPhrase = isMobile ? 2.4 : 2.4;
+        const speedFactorTop = isMobile ? 2 : 1;
+        const speedFactorBottom = isMobile ? 5 : 2;
         // Frase superior: empieza antes (3.5 viewports antes)
         if (this.scrollTopEl) {
-          const startPointTop = sectionTop - viewportHeight * 3.5;
+          const startPointTop = sectionTop - viewportHeight * heightScrollTopPhrase;
           const endPointTop = sectionTop + section.offsetHeight + viewportHeight * 1.5;
           const animationRangeTop = endPointTop - startPointTop;
           const progressTop = (scrollY - startPointTop) / animationRangeTop;
-          const translate = (progressTop - 0.5) * 650;
+          const translate = (progressTop - 0.5) * 650 * speedFactorTop;
           this.scrollTopEl.style.transform = `translateX(${translate}%)`;
         }
-        
+
         // Frase inferior: empieza después (1.5 viewports antes)
         if (this.scrollBottomEl) {
-          const startPointBottom = sectionTop - viewportHeight * 1.5;
+          const startPointBottom = sectionTop - viewportHeight * heightScrollBottomPhrase;
           const endPointBottom = sectionTop + section.offsetHeight + viewportHeight * 1.5;
           const animationRangeBottom = endPointBottom - startPointBottom;
           const progressBottom = (scrollY - startPointBottom) / animationRangeBottom;
-          const translate = -(progressBottom - 0.5) * 250;
+          // En mobile, multiplicar la velocidad por 2
+
+
+          const translate = -(progressBottom - 0.5) * 250 * speedFactorBottom;
           this.scrollBottomEl.style.transform = `translateX(${translate}%)`;
         }
       };
-      
+
       this.scrollHandler = () => {
         requestAnimationFrame(updatePhrases);
       };
-      
+
       window.addEventListener('scroll', this.scrollHandler, { passive: true });
       console.log('Scroll listener added');
       updatePhrases();

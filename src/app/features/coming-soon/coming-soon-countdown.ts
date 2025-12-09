@@ -228,22 +228,25 @@ export class ComingSoonCountdown3D {
         */
     }
 
-    private CONFIG = {
-        NEON_COLOR: new THREE.Color('#FF7A00'),
-        FRAME_COLOR: new THREE.Color('#FF7A00'),
-        OFF_COLOR: new THREE.Color('#0b151a'),
-        PANEL_COLOR: new THREE.Color('#091016'),
-        BLOOM_STRENGTH: 3.0,
-        BLOOM_RADIUS: 0.6,
-        BLOOM_THRESHOLD: 0.0,
-        DIGIT_W: 12,
-        DIGIT_H: 20,
-        SEG_T: 2.2,
-        PANEL_PADDING_X: 6,
-        PANEL_PADDING_Y: 8,
-        GAP_BETWEEN_PANELS: 6,
-        GAP_BETWEEN_DIGITS: 3.5
-    };
+    private CONFIG = (() => {
+        const isMobile = typeof window !== 'undefined' && window.innerWidth <= 900;
+        return {
+            NEON_COLOR: new THREE.Color('#FF7A00'),
+            FRAME_COLOR: new THREE.Color('#FF7A00'),
+            OFF_COLOR: new THREE.Color('#0b151a'),
+            PANEL_COLOR: new THREE.Color('#091016'),
+            BLOOM_STRENGTH: 3.0,
+            BLOOM_RADIUS: 0.6,
+            BLOOM_THRESHOLD: 0.0,
+            DIGIT_W: isMobile ? 9 : 12,
+            DIGIT_H: isMobile ? 15 : 20,
+            SEG_T: isMobile ? 1.2 : 2.2,
+            PANEL_PADDING_X: isMobile ? 4 : 6,
+            PANEL_PADDING_Y: isMobile ? 3 : 8,
+            GAP_BETWEEN_PANELS: isMobile ? 4 : 6,
+            GAP_BETWEEN_DIGITS: isMobile ? 1.5 : 3.5
+        };
+    })();
 
     private SEGMENTS_BY_DIGIT = {
         0: [0, 1, 2, 3, 4, 5],
@@ -268,8 +271,10 @@ export class ComingSoonCountdown3D {
             this.orthoSize, -this.orthoSize,
             0.1, 1000
         );
-        this.camera.zoom = 0.44;
-        this.camera.position.set(0, 0, 120);
+        const isMobile = window.innerWidth <= 900;
+        this.camera.zoom = isMobile ? 0.28 : 0.44;
+        const cameraZ = isMobile ? 120 : 120;
+        this.camera.position.set(0, 0, cameraZ);
         this.camera.lookAt(0, 0, 0);
         this.camera.rotation.set(0, 0, 0);
         this.camera.updateProjectionMatrix();
@@ -471,6 +476,12 @@ export class ComingSoonCountdown3D {
         this.camera.right = this.orthoSize * aspect;
         this.camera.top = this.orthoSize;
         this.camera.bottom = -this.orthoSize;
+        // Alejar más la cámara y reducir zoom en mobile también al redimensionar
+        const isMobile = window.innerWidth <= 900;
+        this.camera.zoom = isMobile ? 0.28 : 0.44;
+        const cameraZ = isMobile ? 250 : 120;
+        this.camera.position.z = cameraZ;
+        this.camera.updateProjectionMatrix();
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.composer.setSize(window.innerWidth, window.innerHeight);

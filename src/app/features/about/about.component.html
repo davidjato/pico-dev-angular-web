@@ -1,14 +1,39 @@
-<section class="feature-section">
+<section class="feature-section" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
   <div class="about-menu">
-    <ul>
+
+    <!-- MOBILE -->
+    <div class="carousel-touch-area only-mobile">
+      <button class="carousel-arrow left" type="button" (click)="prevOption()" [disabled]="selectedIndex === 0"
+        aria-label="Previous">
+        &#8592;
+      </button>
+
+      <div class="carousel-slide">
+        <div class="carousel-option" [@slideInOut]="selectedIndex">
+          <span class="menu-number">0{{ selectedIndex + 1 }}</span>
+          <span class="menu-title">{{ menuOptions[selectedIndex] }}</span>
+        </div>
+      </div>
+
+      <button class="carousel-arrow right" type="button" (click)="nextOption()"
+        [disabled]="selectedIndex === menuOptions.length - 1" aria-label="Next">
+        &#8594;
+      </button>
+    </div>
+
+    <!-- DESKTOP -->
+    <ul class="only-desktop">
       <li *ngFor="let option of menuOptions; let i = index" [class.selected]="selectedIndex === i"
         (click)="selectOption(i)">
-        <span class="menu-number">0{{ i + 1 }}</span> {{ option }}
+        <span class="menu-number">0{{ i + 1 }}</span>
+        <span class="menu-title">{{ option }}</span>
       </li>
     </ul>
+
   </div>
+
   <div class="about-content">
-    <div class="about-content-text">
+    <div class="about-content-text" [@slideInOut]="selectedIndex">
       {{ contents[selectedIndex] }}
     </div>
   </div>

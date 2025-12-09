@@ -25,6 +25,7 @@ import { VignetteShader } from 'three/examples/jsm/shaders/VignetteShader.js';
   styleUrls: ['./why-us.component.scss']
 })
 export class WhyUsComponent implements AfterViewInit {
+  activePoint = 0;
   renderer!: THREE.WebGLRenderer;
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
@@ -385,19 +386,15 @@ export class WhyUsComponent implements AfterViewInit {
     this.guiInitialized = true;
   }
 
-  onPointHover(isHovered: boolean) {
+  onPointHover(isHovered: boolean, idx?: number) {
     this.isPointHovered = isHovered;
+    // Solo en mobile, actualiza el punto activo
+    if (isHovered && typeof idx === 'number' && this.isMobile()) {
+      this.activePoint = idx;
+    }
   }
 
-  private recreateColumns() {
-    // Eliminar columnas existentes de la escena
-    this.columns.forEach(c => {
-      this.scene.remove(c);
-      c.geometry.dispose();
-      (c.material as THREE.Material).dispose();
-    });
-    this.columns = [];
-    // Recrear columnas con nuevos parámetros
-    this.createColumns();
+  isMobile(): boolean {
+    return typeof window !== 'undefined' && window.innerWidth <= 900;
   }
 }

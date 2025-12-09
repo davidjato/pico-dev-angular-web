@@ -30,11 +30,12 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^21.0.3",
     "@angular/build": "^20.3.7",
     "@angular/cli": "^20.3.7",
-    "@angular/compiler-cli": "^20.3.0",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
+    "@angular/compiler-cli": "^20.3.0",
     "@angular/core": "^20.3.0",
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",

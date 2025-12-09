@@ -1,3 +1,33 @@
+@media (max-width: 768px) {
+  .hand-image {
+    position: absolute !important;
+    top: 0;
+
+    width: 120vw;
+    height: 40vh;
+    margin: 0 !important;
+    z-index: 1 !important;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .left-hand {
+    left: -20vw;
+
+    right: auto;
+  }
+
+  .right-hand {
+    right: -20vw;
+    left: auto;
+  }
+
+  .contact-content {
+    position: relative;
+    z-index: 2 !important;
+  }
+}
+
 .contact-section {
   width: 100%;
   min-height: 100vh;
@@ -131,7 +161,8 @@
 @media (max-width: 768px) {
   .contact-section {
     flex-direction: column;
-    padding: 2rem 1rem;
+    padding: 2rem 0rem;
+    min-height: unset !important;
   }
 
   .hand-image {
@@ -140,7 +171,7 @@
   }
 
   .contact-content {
-    padding: 2rem 1rem;
+    padding: 2rem 2rem;
   }
 
   .contact-title {
@@ -149,9 +180,18 @@
 
   .email-form {
     flex-direction: column;
+    background-color: #000000;
+    position: relative;
+
   }
 
   .submit-button {
     width: 100%;
+
+  }
+
+  .email-input {
+
+    width: 90%;
   }
 }

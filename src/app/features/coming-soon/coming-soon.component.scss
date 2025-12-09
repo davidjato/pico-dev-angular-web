@@ -1,3 +1,25 @@
+@media (max-width: 900px) {
+  .artist-reveal {
+    top: 50%;
+  }
+}
+
+@media (max-width: 900px) {
+  .scroll-phrase {
+    font-size: 1.2rem !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .scroll-phrase-top {
+    top: 35%;
+  }
+
+  .scroll-phrase-bottom {
+    bottom: 35%;
+  }
+}
+
 .coming-soon-root {
   position: relative;
   width: 100vw;
@@ -14,7 +36,6 @@
   height: 100%;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(1200px 800px at 70% 20%, #0a1320, #05070c 55%, #020408 100%);
 }
 
 .hud {
