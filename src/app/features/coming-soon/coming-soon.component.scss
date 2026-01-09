@@ -1,168 +1,22 @@
-@media (max-width: 900px) {
-  #collab .canvas-container,
-  #collab canvas {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    min-width: 100vw !important;
-    min-height: 100vh !important;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    position: absolute !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: auto;
-  }
-}
-
-@media (max-width: 900px) {
-  .artist-reveal {
-    top: 50%;
-  }
-}
-
-@media (max-width: 900px) {
-  .scroll-phrase {
-    font-size: 1.2rem !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .scroll-phrase-top {
-    top: 35%;
-  }
-
-  .scroll-phrase-bottom {
-    bottom: 35%;
-  }
-}
-
-:host {
-  display: block !important;
-  width: 100% !important;
-  height: 100vh !important;
-  overflow: visible !important;
-  contain: none !important;
-}
-
-#collab {
+﻿#collab {
   position: relative;
   width: 100%;
-  height: 100vh;
-  overflow: visible !important;
-  contain: none !important;
-  clip-path: none !important;
-  mask: none !important;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
 }
 
 .canvas-container {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 1 !important;
-  pointer-events: none !important;
-  display: block !important;
-  visibility: visible !important;
-  overflow: visible !important;
-  contain: none !important;
-  clip-path: none !important;
-  mask: none !important;
-
-  canvas {
-    display: block !important;
-    visibility: visible !important;
-    width: 100% !important;
-    height: 100% !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    overflow: visible !important;
-    contain: none !important;
-  }
-}
-
-.hud {
   position: absolute;
-  inset: 0 0 auto 0;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-  padding: 14px;
-  color: #7ea7b7;
-  font-size: 12px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  text-shadow: 0 0 8px rgba(0, 246, 255, .25);
-  z-index: 10;
-}
-
-.hud strong {
-  color: #b5f7ff;
-}
-
-.controls {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  display: flex;
-  gap: 8px;
-  z-index: 10;
-}
-
-.btn {
-  appearance: none;
-  border: 0;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  background: rgba(0, 0, 0, .35);
-  color: #c0e9ef;
-  font-weight: 600;
-  letter-spacing: .04em;
-  box-shadow: inset 0 0 0 1px rgba(0, 246, 255, .2), 0 6px 24px rgba(0, 0, 0, .4);
-  text-shadow: 0 0 10px rgba(0, 246, 255, .35);
-  transition: box-shadow 0.2s;
-}
-
-.btn:hover {
-  box-shadow: inset 0 0 0 1px rgba(0, 246, 255, .35), 0 8px 30px rgba(0, 0, 0, .5);
-}
-
-.scroll-phrase {
-  position: absolute;
+  top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
   pointer-events: none;
-  z-index: 100;
-  font-size: 2.2rem;
-  font-weight: 100 !important;
-  color: #fff;
-  white-space: nowrap;
-  font-family: 'Roboto', Arial, Helvetica, sans-serif !important;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  will-change: transform;
-}
-
-.scroll-phrase-top {
-  top: 20%;
-}
-
-.scroll-phrase-bottom {
-  bottom: 20%;
-}
-
-.scroll-phrase .highlight {
-  font-weight: 600 !important;
-  color: #fff !important;
 }
 
 .artist-reveal {
@@ -173,29 +27,22 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 0;
-  z-index: 99;
+  z-index: 10;
+
+  span {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
 }
 
-.artist-reveal-underline {
-  font-family: 'Roboto', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 100;
-  text-transform: none;
-  letter-spacing: 0.04em;
-  color: #fff;
-  position: relative;
-
-  &::first-letter {
-    text-transform: uppercase;
-  }
-
-  &::after {
-    content: '';
-    display: block;
-    width: 60%;
-    margin: 0 auto;
-    border-bottom: 1px solid #fff;
-    margin-top: 0.3em;
+@media (max-width: 900px) {
+  .artist-reveal span {
+    font-size: 0.9rem;
   }
 }

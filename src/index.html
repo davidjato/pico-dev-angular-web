@@ -3,105 +3,65 @@
 
 <head>
   <meta charset="utf-8">
-  <title>PiCollect - MORE THAN A PARTYA COLLECTIVE COMMUNITY</title>
+  <title>Picollect - A New Way to Celebrate | Music, Connection & Mental Health</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description"
-    content="PiCollect: Más que un evento — una celebración consciente. Ven por la música — quédate por el significado. Producción de clase mundial que celebra con propósito.">
+    content="Picollect: More than music. More than a party. A cultural movement built around people, connection, and purpose. Join us for a conscious celebration where mental health matters.">
   <meta name="keywords"
-    content="PiCollect, festival, música, conciencia, comunidad, impacto, evento, celebración, talleres, transformación, social, ambiental">
-  <meta name="author" content="PiCollect Team">
+    content="Picollect, music festival, mental health, conscious celebration, cultural movement, community, connection, purpose, awareness, impact, transformative experiences, world-class production, social initiatives">
+  <meta name="author" content="Picollect Team">
   <meta name="robots" content="index, follow">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="theme-color" content="#FF7A00">
   <!-- OpenGraph -->
-  <meta property="og:title" content="PiCollect Festival" />
+  <meta property="og:title" content="Picollect - A New Way to Celebrate | Music & Mental Health Movement" />
   <meta property="og:description"
-    content="Más que un evento — una celebración consciente. Ven por la música — quédate por el significado. Producción de clase mundial que celebra con propósito." />
+    content="More than an event — a conscious celebration. Come for the music, stay for the meaning. A cultural movement built around connection, mental health awareness, and positive impact." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://picollect.com/" />
   <meta property="og:image" content="https://picollect.com/assets/images/og-image.jpg" />
-  <meta property="og:site_name" content="PiCollect Festival" />
-  <meta property="og:locale" content="es_ES" />
+  <meta property="og:site_name" content="Picollect" />
+  <meta property="og:locale" content="en_US" />
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PiCollect Festival" />
+  <meta name="twitter:title" content="Picollect - A New Way to Celebrate" />
   <meta name="twitter:description"
-    content="Más que un evento — una celebración consciente. Ven por la música — quédate por el significado." />
+    content="More than music. A cultural movement built around people, connection, mental health awareness, and purpose. Join the pre-list." />
   <meta name="twitter:image" content="https://picollect.com/assets/images/og-image.jpg" />
   <meta name="twitter:site" content="@picollect" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=Inter:wght@400;500&display=swap"
+    rel="stylesheet">
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
+
   <!-- Eruda: Inspector de consola para mobile debugging -->
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script>
-  
-  <!-- Botón para copiar logs -->
+
+  <!-- Animated Title -->
   <script>
-    window.addEventListener('load', () => {
-      // Capturar todos los logs
-      window.allLogs = [];
-      const originalLog = console.log;
-      const originalWarn = console.warn;
-      const originalError = console.error;
-      
-      console.log = function(...args) {
-        window.allLogs.push('[LOG] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
-        originalLog.apply(console, args);
-      };
-      
-      console.warn = function(...args) {
-        window.allLogs.push('[WARN] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
-        originalWarn.apply(console, args);
-      };
-      
-      console.error = function(...args) {
-        window.allLogs.push('[ERROR] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
-        originalError.apply(console, args);
-      };
-      
-      // Crear botón flotante
-      const btn = document.createElement('button');
-      btn.textContent = '📋 Copiar Logs';
-      btn.style.cssText = `
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 999999;
-        padding: 10px 15px;
-        background: #ff7a00;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        font-size: 14px;
-        cursor: pointer;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      `;
-      
-      btn.onclick = async () => {
-        const logs = window.allLogs.join('\n');
-        try {
-          await navigator.clipboard.writeText(logs);
-          btn.textContent = '✅ Copiado!';
-          setTimeout(() => btn.textContent = '📋 Copiar Logs', 2000);
-        } catch (err) {
-          // Fallback para iOS
-          const textarea = document.createElement('textarea');
-          textarea.value = logs;
-          textarea.style.position = 'fixed';
-          textarea.style.opacity = '0';
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textarea);
-          btn.textContent = '✅ Copiado!';
-          setTimeout(() => btn.textContent = '📋 Copiar Logs', 2000);
+    (function () {
+      const originalTitle = 'Picollect - A New Way to Celebrate | Music, Connection & Mental Health';
+      const separator = ' • ';
+      let titleText = originalTitle + separator;
+      let position = 0;
+
+      function animateTitle() {
+        document.title = titleText.substring(position) + titleText.substring(0, position);
+        position++;
+        if (position > titleText.length) {
+          position = 0;
         }
-      };
-      
-      document.body.appendChild(btn);
-    });
+      }
+
+      setInterval(animateTitle, 300);
+    })();
   </script>
 </head>
 

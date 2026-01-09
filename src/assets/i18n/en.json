@@ -1,25 +1,28 @@
-{
+﻿{
   "MAIN": {
     "TITLE": "Main Page",
     "WELCOME": "Welcome to the Angular 20 app"
   },
   "HOME": {
     "TITLE": "Home",
-    "DESCRIPTION": "Welcome to the home section."
+    "DESCRIPTION": "Welcome to the home section.",
+    "INTRO_TITLE": "A new way to celebrate ",
+    "INTRO_SUBTITLE": "Where music creates connection, with purpose and attention.",
+    "CTA_BUTTON": "Lët'z Picollect"
   },
   "ABOUT": {
-    "TITLE": "About",
+    "TITLE": "Why",
     "MENU": {
-      "CONCEPT": "Concept",
-      "MISSION": "Mission",
-      "VISION": "Vision",
-      "MANIFIESTO": "Manifiesto"
+      "CONCEPT": "CONCEPT",
+      "MISSION": "MISSION",
+      "VISION": "VISION",
+      "MANIFIESTO": "MANIFEST"
     },
     "TEXT": {
-      "CONCEPT": "Our concept is to blend technology and creativity for a better world.",
-      "MISSION": "Our mission is to empower people through innovative digital solutions.",
-      "VISION": "We envision a future where technology is accessible and inspiring for all.",
-      "MANIFIESTO": "We believe in openness, collaboration, and positive impact."
+      "CONCEPT": "<p>Picollect is a cultural movement that connects music and celebration to create connection with clear purpose.</p><p>Born in a city that moves fast, we create conscious spaces where mental health is openly accepted as a human reality, not as a trend or campaign.</p><p>Through music-based experiences, we promote presence, community and shared energy, making celebration something meaningful.</p><p>Picollect redefines how we celebrate.<br>With purpose. With people. With attention.</p>",
+      "MISSION": "<p>Our mission is to create connection through meaningful celebration.</p><p>We develop music-based experiences that promote presence, openness and honest connection.</p><p>Mental health is at the core of everything we do, through visibility, concrete actions and long-term commitment.</p>",
+      "VISION": "<p>We envision a culture where celebration creates impact.</p><p>Where events are not defined by their size, but by what they trigger.</p><p>Where music creates consciousness, community creates cohesion, and purpose becomes part of nightlife.</p><p>Our vision is to develop Picollect as a platform that connects artists, communities and mental health, in Luxembourg and beyond.</p>",
+      "MANIFIESTO": "<p>We believe that celebration is a responsibility.<br>We believe that music is a universal language.</p><p>We believe that mental health deserves care, access and visibility, and that joy and consciousness can coexist.</p><p>Picollect is not just something you participate in.<br>It's something you stand for.</p>"
     },
     "DESCRIPTION": "This is the about section."
   },
@@ -32,29 +35,30 @@
       "IMPACT": "Impact"
     },
     "TEXT": {
-      "CELEBRATE": "We celebrate every achievement, big or small, as a community.",
-      "AWARENESS": "We foster awareness and learning for continuous growth.",
+      "CELEBRATE": "We celebrate every achievement, large or small, as a community.",
+      "AWARENESS": "We promote awareness and learning for continuous growth.",
       "COMMUNITY": "Our community is open, inclusive, and supportive.",
       "IMPACT": "We strive to make a positive impact in everything we do."
     },
     "DESCRIPTION": "Reasons to choose us."
   },
   "WHY_US": {
+    "SECTION_TITLE": "PILLARS",
     "POINT_1": {
-      "TITLE": "Celebrate",
-      "DESCRIPTION": "More than an event — a conscious celebration Come for the music — stay for the meaning World-class production that celebrates with purpose"
+      "TITLE": "Mental Health",
+      "DESCRIPTION": "Emotional well-being is at the center of celebration. We create safe and open spaces where mental health is recognized, respected and supported as a shared responsibility."
     },
     "POINT_2": {
-      "TITLE": "Awareness",
-      "DESCRIPTION": "Expand consciousness through immersive experiences and transformative workshops"
+      "TITLE": "Celebrate",
+      "DESCRIPTION": "Music, movement and shared energy, designed to be vibrant, present and deeply human."
     },
     "POINT_3": {
       "TITLE": "Community",
-      "DESCRIPTION": "Connect with like-minded souls in a space of authenticity and belonging"
+      "DESCRIPTION": "Built with people, not for masses. Everyone plays a role, and cohesion comes before size."
     },
     "POINT_4": {
       "TITLE": "Impact",
-      "DESCRIPTION": "Every ticket contributes to meaningful social and environmental initiatives"
+      "DESCRIPTION": "We turn celebration into action. At least 10% of our net profits support local NGOs in the mental health sector.<br><br>Through the 3.14 Program, each event provides free access to therapy. Three people receive one year of support, and fourteen people receive one month of therapy.<br><br>In total, nearly 200 hours of care are offered."
     }
   },
   "COMINGSOON": {
@@ -64,7 +68,43 @@
     "RESUME": "Resume"
   },
   "CONTACT": {
-    "TITLE": "Contact",
-    "DESCRIPTION": "Get in touch with us."
+    "TITLE": "Participate",
+    "DESCRIPTION": "Get in touch with us.",
+    "HEADING_PART1": "BECOME PART OF OUR",
+    "HEADING_HIGHLIGHT1": "STORY",
+    "HEADING_PART2": "BUILD THIS",
+    "HEADING_HIGHLIGHT2": "MOVEMENT TOGETHER",
+    "SUBTITLE_PART1": "BECAUSE",
+    "SUBTITLE_HIGHLIGHT": "CULTURE",
+    "SUBTITLE_PART2": "IS BUILT TOGETHER",
+    "TYPE_ATTENDEE": "GUEST",
+    "TYPE_PROMOTER": "PROMOTER",
+    "TYPE_PARTNER": "PARTNER",
+    "EMAIL_PLACEHOLDER": "Your email",
+    "SUBMIT_BUTTON": "Lët'z Picollect",
+    "SUCCESS_MESSAGE": "Thank you for subscribing! We'll keep you updated."
+  },
+  "HEADER": {
+    "NAV_HOME": "Home",
+    "NAV_WHY": "Why",
+    "NAV_CORE": "Pillars",
+    "NAV_JOIN": "PARTICIPATE"
+  },
+  "FOOTER": {
+    "NAV_HOME": "Home",
+    "NAV_WHY": "Why",
+    "NAV_CORE": "Pillars",
+    "NAV_JOIN": "Participate",
+    "PRIVACY_POLICY": "Privacy Policy"
+  },
+  "COMINGSOON_MARQUEE": {
+    "TOP_TEXT": "INSPIRED BY",
+    "TOP_HIGHLIGHT": "CONTRADICTION",
+    "TOP_TEXT_END": "DRIVEN BY CARE",
+    "BOTTOM_TEXT": "LEAVE LIGHTER AT",
+    "BOTTOM_HIGHLIGHT1": "HEART",
+    "BOTTOM_TEXT_MID": "-- NOT JUST FOR THE SHOW. BUT THE",
+    "BOTTOM_HIGHLIGHT2": "PURPOSE",
+    "ARTIST_REVEAL": "Artist soon to be revealed"
   }
 }

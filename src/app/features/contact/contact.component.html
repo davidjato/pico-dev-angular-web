@@ -5,19 +5,53 @@
 
   <div class="contact-content">
     <h2 class="contact-title">
-      JOIN OUR <span class="highlight">STORY</span>,<br>
-      CO-CREATE THIS <span class="highlight">MOVEMENT</span>
+      {{ 'CONTACT.HEADING_PART1' | translate }} <span class="highlight">{{ 'CONTACT.HEADING_HIGHLIGHT1' | translate
+        }}</span>,<br>
+      {{ 'CONTACT.HEADING_PART2' | translate }} <span class="highlight">{{ 'CONTACT.HEADING_HIGHLIGHT2' | translate
+        }}</span>
     </h2>
 
     <p class="contact-subtitle">
-      REAL <span class="culture">CULTURE</span> IS NOT WHAT YOU CONSUME. IT'S WHAT YOU HELP BUILD
+      {{ 'CONTACT.SUBTITLE_PART1' | translate }} <span class="culture">{{ 'CONTACT.SUBTITLE_HIGHLIGHT' | translate
+        }}</span> {{ 'CONTACT.SUBTITLE_PART2' | translate }}
     </p>
 
-    <div class="email-form">
-      <input type="email" placeholder="Your email" [(ngModel)]="email" class="email-input">
-      <button class="submit-button" (click)="onSubmit()">
-        Lidiz Picollect
+    <div class="type-selector">
+      <button class="type-button" [class.active]="selectedType === 'asistente'" (click)="selectedType = 'asistente'">
+        {{ 'CONTACT.TYPE_ATTENDEE' | translate }}
       </button>
+      <button class="type-button" [class.active]="selectedType === 'promotor'" (click)="selectedType = 'promotor'">
+        {{ 'CONTACT.TYPE_PROMOTER' | translate }}
+      </button>
+      <button class="type-button" [class.active]="selectedType === 'partner'" (click)="selectedType = 'partner'">
+        {{ 'CONTACT.TYPE_PARTNER' | translate }}
+      </button>
+    </div>
+
+    <div class="email-form">
+      <input type="email" [placeholder]="'CONTACT.EMAIL_PLACEHOLDER' | translate" [(ngModel)]="email"
+        class="email-input" [disabled]="isLoading">
+      <button class="submit-button" (click)="onSubmit()" [disabled]="isLoading">
+        @if (!isLoading) {
+        <span>{{ 'CONTACT.SUBMIT_BUTTON' | translate }}</span>
+        }
+        @if (isLoading) {
+        <span>...</span>
+        }
+      </button>
+    </div>
+
+    <div class="status-messages">
+      @if (isSuccess) {
+      <p class="success-message">
+        ✓ {{ 'CONTACT.SUCCESS_MESSAGE' | translate }}
+      </p>
+      }
+      @if (isError) {
+      <p class="error-message">
+        ✗ {{ errorMessage }}
+      </p>
+      }
     </div>
   </div>
 

@@ -100,7 +100,7 @@
     right: 0;
     z-index: 100;
     background: #000;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 @media (max-width: 900px) {
@@ -198,13 +198,13 @@
     padding-right: 1rem;
 
     @media (max-width: 900px) {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #fff;
+    color: #FF7A00;
 }
 
 /* Zona derecha: divisor + idiomas */
@@ -259,7 +259,7 @@
     }
 
     .nav-links a {
-        font-size: 4rem;
+        font-size: 3rem;
 
     }
 }

@@ -1,30 +1,33 @@
-{
+﻿{
   "MAIN": {
     "TITLE": "Página principal",
     "WELCOME": "Bienvenido a la aplicación Angular 20"
   },
   "HOME": {
-    "TITLE": "Inicio",
-    "DESCRIPTION": "Bienvenido a la sección de inicio."
+    "TITLE": "Home",
+    "DESCRIPTION": "Bienvenido a la sección de inicio.",
+    "INTRO_TITLE": "Una nueva forma de celebrar Luxemburgo",
+    "INTRO_SUBTITLE": "Donde la música crea conexión, con propósito y atención.",
+    "CTA_BUTTON": "Lët'z Picollect"
   },
   "ABOUT": {
-    "TITLE": "Acerca de",
+    "TITLE": "Por qué",
     "MENU": {
-      "CONCEPT": "Concepto",
-      "MISSION": "Misión",
-      "VISION": "Visión",
-      "MANIFIESTO": "Manifiesto"
+      "CONCEPT": "CONCEPTO",
+      "MISSION": "MISIÓN",
+      "VISION": "VISIÓN",
+      "MANIFIESTO": "MANIFIESTO"
     },
     "TEXT": {
-      "CONCEPT": "Nuestro concepto es fusionar tecnología y creatividad para un mundo mejor.",
-      "MISSION": "Nuestra misión es empoderar a las personas con soluciones digitales innovadoras.",
-      "VISION": "Imaginamos un futuro donde la tecnología sea accesible e inspiradora para todos.",
-      "MANIFIESTO": "Creemos en la apertura, la colaboración y el impacto positivo."
+      "CONCEPT": "<p>Picollect es un movimiento cultural que conecta música y celebración para crear conexión con un propósito claro.</p><p>Nacido en una ciudad que avanza rápido, creamos espacios conscientes donde la salud mental se acepta abiertamente como una realidad humana, no como una tendencia o campaña.</p><p>A través de experiencias basadas en música, promovemos presencia, comunidad y energía compartida, haciendo de la celebración algo significativo.</p><p>Picollect redefine cómo celebramos.<br>Con propósito. Con personas. Con atención.</p>",
+      "MISSION": "<p>Nuestra misión es crear conexión a través de la celebración significativa.</p><p>Desarrollamos experiencias basadas en música que promueven presencia, apertura y conexión honesta.</p><p>La salud mental está en el núcleo de todo lo que hacemos, a través de visibilidad, acciones concretas y compromiso a largo plazo.</p>",
+      "VISION": "<p>Imaginamos una cultura donde la celebración crea impacto.</p><p>Donde los eventos no se definen por su tamaño, sino por lo que desencadenan.</p><p>Donde la música crea conciencia, la comunidad crea cohesión, y el propósito se convierte en parte de la vida nocturna.</p><p>Nuestra visión es desarrollar Picollect como una plataforma que conecta artistas, comunidades y salud mental, en Luxemburgo y más allá.</p>",
+      "MANIFIESTO": "<p>Creemos que la celebración es una responsabilidad.<br>Creemos que la música es un lenguaje universal.</p><p>Creemos que la salud mental merece cuidado, acceso y visibilidad, y que la alegría y la conciencia pueden coexistir.</p><p>Picollect no es solo algo en lo que participas.<br>Es algo que defiendes.</p>"
     },
     "DESCRIPTION": "Esta es la sección sobre nosotros."
   },
   "WHYUS": {
-    "TITLE": "Por qué elegirnos",
+    "TITLE": "Por qué nosotros",
     "MENU": {
       "CELEBRATE": "Celebrar",
       "AWARENESS": "Conciencia",
@@ -40,21 +43,22 @@
     "DESCRIPTION": "Razones para elegirnos."
   },
   "WHY_US": {
+    "SECTION_TITLE": "PILARES",
     "POINT_1": {
-      "TITLE": "Celebrar",
-      "DESCRIPTION": "Más que un evento — una celebración consciente. Ven por la música — quédate por el significado. Producción de clase mundial que celebra con propósito"
+      "TITLE": "Salud Mental",
+      "DESCRIPTION": "El bienestar emocional está en el centro de la celebración. Creamos espacios seguros y abiertos donde la salud mental es reconocida, respetada y apoyada como una responsabilidad compartida."
     },
     "POINT_2": {
-      "TITLE": "Conciencia",
-      "DESCRIPTION": "Expande tu conciencia a través de experiencias inmersivas y talleres transformadores"
+      "TITLE": "Celebrar",
+      "DESCRIPTION": "Música, movimiento y energía compartida, diseñados para ser vibrantes, presentes y profundamente humanos."
     },
     "POINT_3": {
       "TITLE": "Comunidad",
-      "DESCRIPTION": "Conecta con almas afines en un espacio de autenticidad y pertenencia"
+      "DESCRIPTION": "Construido con personas, no para masas. Todos juegan un papel, y la cohesión viene antes que el tamaño."
     },
     "POINT_4": {
       "TITLE": "Impacto",
-      "DESCRIPTION": "Cada entrada contribuye a iniciativas sociales y ambientales significativas"
+      "DESCRIPTION": "Convertimos la celebración en acción. Al menos el 10% de nuestros beneficios netos apoyan ONGs locales en el sector de salud mental.<br><br>A través del Programa 3.14, cada evento proporciona acceso gratuito a terapia. Tres personas reciben un año de apoyo, y catorce personas reciben un mes de terapia.<br><br>En total, se ofrecen casi 200 horas de atención."
     }
   },
   "COMINGSOON": {
@@ -64,7 +68,42 @@
     "RESUME": "Reanudar"
   },
   "CONTACT": {
-    "TITLE": "Contacto",
-    "DESCRIPTION": "Ponte en contacto con nosotros."
+    "TITLE": "Participa",
+    "DESCRIPTION": "Ponte en contacto con nosotros.",
+    "HEADING_PART1": "SÉ PARTE DE NUESTRA",
+    "HEADING_HIGHLIGHT1": "HISTORIA",
+    "HEADING_PART2": "CONSTRUYE ESTE",
+    "HEADING_HIGHLIGHT2": "MOVIMIENTO JUNTOS",
+    "SUBTITLE_PART1": "PORQUE LA",
+    "SUBTITLE_HIGHLIGHT": "CULTURA",
+    "SUBTITLE_PART2": "SE CONSTRUYE JUNTOS",
+    "TYPE_ATTENDEE": "INVITADO",
+    "TYPE_PROMOTER": "PROMOTOR",
+    "TYPE_PARTNER": "PARTNER",
+    "EMAIL_PLACEHOLDER": "Tu email",
+    "SUBMIT_BUTTON": "Lët'z Picollect"
+  },
+  "HEADER": {
+    "NAV_HOME": "Home",
+    "NAV_WHY": "Por qué",
+    "NAV_CORE": "Pilares",
+    "NAV_JOIN": "PARTICIPA"
+  },
+  "FOOTER": {
+    "NAV_HOME": "Home",
+    "NAV_WHY": "Por qué",
+    "NAV_CORE": "Pilares",
+    "NAV_JOIN": "Participa",
+    "PRIVACY_POLICY": "Política de privacidad"
+  },
+  "COMINGSOON_MARQUEE": {
+    "TOP_TEXT": "INSPIRADO POR LA",
+    "TOP_HIGHLIGHT": "CONTRADICCIÓN",
+    "TOP_TEXT_END": "IMPULSADO POR EL CUIDADO",
+    "BOTTOM_TEXT": "DEJA MÁS LIGERO EL",
+    "BOTTOM_HIGHLIGHT1": "CORAZÓN",
+    "BOTTOM_TEXT_MID": "-- NO SOLO POR EL SHOW. SINO POR EL",
+    "BOTTOM_HIGHLIGHT2": "PROPÓSITO",
+    "ARTIST_REVEAL": "Artista pronto será revelado"
   }
 }

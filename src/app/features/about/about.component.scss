@@ -31,11 +31,17 @@ $bp-mobile: 900px;
   box-sizing: border-box;
 
   /* Base Tipografías */
-  .menu-number,
-  .menu-title,
+  .menu-number {
+    font-family: "Space Grotesk", sans-serif;
+  }
+
+  .menu-title {
+    font-family: "Space Grotesk", sans-serif;
+  }
+
   .about-content-text,
   .carousel-option {
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-family: "Inter", sans-serif;
   }
 
   /* ------------------------------------------------------------------------
@@ -145,6 +151,8 @@ $bp-mobile: 900px;
     .about-content {
       flex: 1;
       padding-left: 0;
+      max-height: 80vh;
+      overflow-y: auto;
     }
 
     .about-content-text {

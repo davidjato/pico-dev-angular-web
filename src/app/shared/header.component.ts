@@ -1,23 +1,28 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-header',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, TranslateModule],
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
     private translate = inject(TranslateService);
-    
-    currentLang: 'en' | 'fr' | 'es' = 'es';
+
+    currentLang: 'en' | 'fr' | 'lb' = 'en';
     menuOpen = false;
 
-    changeLang(lang: 'en' | 'fr' | 'es') {
+    constructor() {
+        // Establecer inglés por defecto al iniciar
+        this.translate.use('en');
+    }
+
+    changeLang(lang: 'en' | 'fr' | 'lb') {
         this.currentLang = lang;
         this.translate.use(lang);
         console.log('Idioma cambiado a:', lang);

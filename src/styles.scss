@@ -5,6 +5,33 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #000 !important;
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.title,
+.heading {
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 700;
+}
+
+p,
+span,
+a,
+button,
+input,
+textarea,
+.text,
+.body {
+	font-family: 'Inter', sans-serif;
+	font-weight: 400;
 }
 
 /* Custom scrollbar */
@@ -48,7 +75,6 @@ feature-coming-soon {
 	width: 100% !important;
 	height: 100vh !important;
 	min-width: 100vw !important;
-	min-height: 100vh !important;
 }
 
 /* You can add global styles to this file, and also import other style files */

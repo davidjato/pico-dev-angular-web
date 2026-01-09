@@ -1,13 +1,11 @@
 <section id="who" class="feature-section">
-  <div #threeBg class="three-bg"></div>
-  <div class="blur-overlay" [class.active]="isPointHovered"></div>
-
   <div class="content-wrapper">
+    <h2 class="section-title">{{ 'WHY_US.SECTION_TITLE' | translate }}</h2>
     <div class="points-list">
       <div class="point-item" *ngFor="let point of [1,2,3,4]; let idx = index"
         [ngClass]="{'inactive': isMobile() && activePoint !== idx}" (mouseenter)="onPointHover(true, idx)"
         (mouseleave)="onPointHover(false)">
-        <div class="point-number">P<br>0.<br>{{ point }}</div>
+        <div class="point-number">P0.{{ point }}</div>
         <div class="point-content">
           <h3 class="point-title">{{ ('WHY_US.POINT_' + point + '.TITLE') | translate }}</h3>
           <p class="point-description">{{ ('WHY_US.POINT_' + point + '.DESCRIPTION') | translate }}</p>

@@ -1,4 +1,99 @@
-@media (max-width: 900px) {
+@media (max-width: 600px) {
+  #home {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
+
+    .home-logo {
+      flex: 1 !important;
+      height: auto !important;
+      min-height: 60vh;
+      max-height: 70vh;
+      width: 100%;
+      padding: 2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      img {
+        width: 70vw;
+        max-width: 300px;
+        height: auto;
+      }
+    }
+
+    .home-intro {
+      flex: 0 0 auto !important;
+      height: auto !important;
+      min-height: 30vh;
+      max-height: 40vh;
+      width: 100%;
+      max-width: 100%;
+      align-items: center;
+      text-align: center;
+      padding: 1.5rem 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+
+      .intro-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+
+      .intro-subtitle {
+        font-size: 0.8rem !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .cta-button {
+        font-size: 0.85rem !important;
+        padding: 0.7rem 1.5rem !important;
+      }
+    }
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1000px) {
+  #home {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+    min-height: 100vh;
+    height: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
+
+    .home-logo {
+      flex: 0 0 auto !important;
+      height: auto !important;
+      min-height: 40vh;
+      max-height: 50vh;
+      width: 100%;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      img {
+        width: 45vw;
+        max-width: 350px;
+        height: auto;
+      }
+    }
+
+
+  }
 
   #home .canvas-wrapper,
   #home canvas {
@@ -12,14 +107,14 @@
     right: 0;
     top: 0;
     bottom: 0;
-    position: absolute;
+    position: fixed;
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    /* Prevenir colapso en Safari iOS */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: auto;
+    z-index: 0;
   }
 }
 
@@ -35,21 +130,50 @@
   }
 }
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,400,700&display=swap');
-
 body,
 html {
-  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 #home {
   position: relative;
   width: 100%;
   height: 100vh;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
 
   overflow: hidden;
   color: #e0fafa;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  .home-logo {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+
+    img {
+      width: 90%;
+      max-width: 500px;
+      height: auto;
+      aspect-ratio: 1;
+      object-fit: contain;
+      filter: drop-shadow(0 0 20px rgba(255, 122, 0, 0.5));
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
 
   .canvas-wrapper {
     position: absolute;
@@ -274,13 +398,16 @@ canvas {
 
 /* Bloque de texto */
 .home-intro {
-  position: absolute;
-  top: 50%;
-  right: 12%;
-  transform: translateY(-50%);
-  max-width: 50vw;
-  color: #fff;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 4rem;
   text-align: left;
+  color: #fff;
+  z-index: 1;
 }
 
 /* “MORE THAN A” */
@@ -339,19 +466,19 @@ canvas {
 
 @media (max-width: 900px) {
   .home-intro {
-    position: absolute;
-    left: 50%;
-    bottom: 5vh;
-    max-width: 90vw;
-    width: 90vw;
-    padding: 0 8vw;
-    right: auto;
-    text-align: center;
-    top: auto;
+    * {
+      margin: 1rem auto;
+      text-align: center;
+    }
+
+    .home-intro-subtitle {
+      padding: 0 1rem;
+    }
   }
 
   .home-intro-title {
     font-size: 32px;
+    padding: 0 1rem;
   }
 
   #home {

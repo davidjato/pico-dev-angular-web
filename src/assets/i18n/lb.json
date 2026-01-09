@@ -1,0 +1,110 @@
+{
+    "MAIN": {
+        "TITLE": "Haaptsäit",
+        "WELCOME": "Wëllkomm bei der Angular 20 Applikatioun"
+    },
+    "HOME": {
+        "TITLE": "Home",
+        "DESCRIPTION": "Wëllkomm an der Heemssektioun.",
+        "INTRO_TITLE": "Eng nei Aart, Lëtzebuerg ze feieren",
+        "INTRO_SUBTITLE": "Do wou Musek eng Connexioun schaaft, mat Sënn an Opmierksamkeet.",
+        "CTA_BUTTON": "Lëtz Picollect"
+    },
+    "ABOUT": {
+        "TITLE": "Firwat",
+        "MENU": {
+            "CONCEPT": "KONZEPT",
+            "MISSION": "MISSIOUN",
+            "VISION": "VISIOUN",
+            "MANIFIESTO": "MANIFEST"
+        },
+        "TEXT": {
+            "CONCEPT": "<p>Picollect ass eng kulturell Beweegung, déi Musek a Feiere verbënnt, fir mat engem kloere Sënn Connexioun ze schafen.</p><p>Entstanen an enger Stad, déi séier virugeet, schafe mir bewosst Raim, wou mental Gesondheet oppen als mënschlech Realitéit ugeholl gëtt, net als Trend oder Campagne.</p><p>Duerch museksbaséiert Erfarunge fërdere mir Präsenz, Gemeinschaft a gemeinsam Energie, an maachen aus Feiere eppes Sënnvolles.</p><p>Picollect definéiert nei, wéi mir feieren.<br>Mat Sënn. Mat de Leit. Mat Opmierksamkeet.</p>",
+            "MISSION": "<p>Eis Missioun ass et, duerch sënnvoll Feieren Kontakt ze schafen.</p><p>Mir entwéckele museksbaséiert Erfarungen, déi Präsenz, Oppenheet an éierlech Connexioun fërderen.</p><p>Mental Gesondheet steet am Kär vun allem, wat mir maachen, duerch Visibilitéit, konkret Aktiounen a laangfristegt Engagement.</p>",
+            "VISION": "<p>Mir stelle eis eng Kultur vir, an där Feieren en Impakt huet.</p><p>Wou Eventer net duerch hir Gréisst definéiert ginn, mee duerch dat, wat si ausléisen.</p><p>Wou Musek Bewosstsinn schaaft, Gemeinschaft Zesummenhalt, a Sënn Deel vum Nightlife gëtt.</p><p>Eis Visioun ass et, Picollect als Plattform ze entwéckelen, déi Kënschtler, Communautéiten a mental Gesondheet verbënnt, zu Lëtzebuerg an doriwwer eraus.</p>",
+            "MANIFIESTO": "<p>Mir gleewen, datt Feieren eng Verantwortung ass.<br>Mir gleewen, datt Musek eng universell Sprooch ass.</p><p>Mir gleewen, datt mental Gesondheet Fleeg, Zougang a Visibilitéit verdéngt, an datt Freed a Bewosstsinn zesumme kënne bestoen.</p><p>Picollect ass net just eppes, wou ee matmécht.<br>Et ass eppes, wouriwwer een steet.</p>"
+        },
+        "DESCRIPTION": "Dëst ass d'Sektioun iwwer eis."
+    },
+    "WHYUS": {
+        "TITLE": "Firwat eis wielen",
+        "MENU": {
+            "CELEBRATE": "Feieren",
+            "AWARENESS": "Bewosstsinn",
+            "COMMUNITY": "Gemeinschaft",
+            "IMPACT": "Impakt"
+        },
+        "TEXT": {
+            "CELEBRATE": "Mir feieren all Erreeche, grouss oder kleng, als Gemeinschaft.",
+            "AWARENESS": "Mir fërderen Bewosstsinn a Léieren fir kontinuéierlecht Wuesstum.",
+            "COMMUNITY": "Eis Gemeinschaft ass oppen, inklusiv a supportiv.",
+            "IMPACT": "Mir sichen e positive Impakt an allem wat mir maachen ze generéieren."
+        },
+        "DESCRIPTION": "Grënn fir eis ze wielen."
+    },
+    "WHY_US": {
+        "SECTION_TITLE": "PILIEREN",
+        "POINT_1": {
+            "TITLE": "Mental Gesondheet",
+            "DESCRIPTION": "Emotionalt Wuelbefanne steet am Zentrum vum Feieren. Mir schafe sécher an oppen Raim, wou mental Gesondheet unerkannt, respektéiert an ënnerstëtzt gëtt als gemeinsam Verantwortung."
+        },
+        "POINT_2": {
+            "TITLE": "Feieren",
+            "DESCRIPTION": "Musek, Beweegung a gemeinsam Energie, entworf fir lieweg, präsent a déif mënschlech ze sinn."
+        },
+        "POINT_3": {
+            "TITLE": "Gemeinschaft",
+            "DESCRIPTION": "Opgebaut mat de Leit, net fir Masse. Jidderee spillt eng Roll, a Zesummenhalt geet virun der Gréisst."
+        },
+        "POINT_4": {
+            "TITLE": "Impakt",
+            "DESCRIPTION": "Mir maachen aus Feieren Handlung. Op d'mannst 10 % vun eise Netto-Gewënner ënnerstëtzen lokal ONG'en am Beräich mental Gesondheet.<br><br>Duerch de Programm 3.14 kritt all Event gratis Zougang zu Therapie. Dräi Persoune kréien eng jäerlech Begleedung, a véierzéng Persoune ee Mount Therapie.<br><br>Am Ganze ginn bal 200 Stonne Betreiung ugebueden."
+        }
+    },
+    "COMINGSOON": {
+        "TITLE": "Geschwënn",
+        "DESCRIPTION": "Dës Sektioun ass geschwënn verfügbar.",
+        "PAUSE": "Paus",
+        "RESUME": "Weider"
+    },
+    "CONTACT": {
+        "TITLE": "Matdéiën",
+        "DESCRIPTION": "Kontaktéier eis.",
+        "HEADING_PART1": "GËTT DEEL VUN EISER",
+        "HEADING_HIGHLIGHT1": "GESCHICHT",
+        "HEADING_PART2": "BAU DËS",
+        "HEADING_HIGHLIGHT2": "BEWEEGUNG MAT",
+        "SUBTITLE_PART1": "WELL",
+        "SUBTITLE_HIGHLIGHT": "KULTUR",
+        "SUBTITLE_PART2": "ZESUMME GEBAUT GËTT",
+        "TYPE_ATTENDEE": "GAST",
+        "TYPE_PROMOTER": "PROMOTOR",
+        "TYPE_PARTNER": "PARTNER",
+        "EMAIL_PLACEHOLDER": "Deng Email",
+        "SUBMIT_BUTTON": "Lëtz Picollect",
+        "SUCCESS_MESSAGE": "Merci fir däin Umeldung! Mir halen Dech um lafenden."
+    },
+    "HEADER": {
+        "NAV_HOME": "Home",
+        "NAV_WHY": "Firwat",
+        "NAV_CORE": "Pilieren",
+        "NAV_JOIN": "MATDÉIËN"
+    },
+    "FOOTER": {
+        "NAV_HOME": "Home",
+        "NAV_WHY": "Firwat",
+        "NAV_CORE": "Pilieren",
+        "NAV_JOIN": "Matdéiën",
+        "PRIVACY_POLICY": "Dateschutz Politik"
+    },
+    "COMINGSOON_MARQUEE": {
+        "TOP_TEXT": "INSPIRÉIERT DUERCH",
+        "TOP_HIGHLIGHT": "WIDERSPROCH",
+        "TOP_TEXT_END": "GEDRIWWEN VU SUERG",
+        "BOTTOM_TEXT": "LOOSS MÉI LIICHT DAT",
+        "BOTTOM_HIGHLIGHT1": "HÄERZ",
+        "BOTTOM_TEXT_MID": "-- NET NËMMEN FIR D'SHOW. MÉE FIR DEN",
+        "BOTTOM_HIGHLIGHT2": "SËNN",
+        "ARTIST_REVEAL": "Artist gëtt geschwënn bekannt gemaach"
+    }
+}

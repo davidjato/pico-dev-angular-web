@@ -33,9 +33,9 @@
 .footer-link {
   color: #ffffff;
   text-decoration: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.8rem;
-  font-weight: 300;
+  font-weight: 400;
   text-transform: uppercase;
   transition: color 0.3s ease;
 
@@ -53,9 +53,9 @@
 .footer-privacy {
   color: #999999;
   text-decoration: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 400;
   transition: color 0.3s ease;
 
   &:hover {
@@ -74,7 +74,7 @@
   background: transparent;
   border: none;
   color: #666666;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;

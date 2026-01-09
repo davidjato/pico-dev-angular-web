@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'es',
+        defaultLanguage: 'en',
       })
     ),
     ...provideTranslateHttpLoader({
@@ -34,8 +34,8 @@ export const appConfig: ApplicationConfig = {
       provide: LOCALE_ID,
       useFactory: () => {
         // Detectar idioma preferido del navegador
-        const navLang = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] : 'es';
-        return ['es', 'en'].includes(navLang) ? navLang : 'es';
+        const navLang = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] : 'en';
+        return ['es', 'en', 'fr', 'lb'].includes(navLang) ? navLang : 'en';
       }
     }
   ]
