@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-header',
@@ -11,12 +12,15 @@ import { CommonModule } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-    currentLang: 'en' | 'fr' | 'es' = 'en';
+    private translate = inject(TranslateService);
+    
+    currentLang: 'en' | 'fr' | 'es' = 'es';
     menuOpen = false;
 
     changeLang(lang: 'en' | 'fr' | 'es') {
         this.currentLang = lang;
-        // Aquí llamas a tu servicio / lógica real de cambio de idioma
+        this.translate.use(lang);
+        console.log('Idioma cambiado a:', lang);
     }
 
     scrollToSection(sectionId: string) {

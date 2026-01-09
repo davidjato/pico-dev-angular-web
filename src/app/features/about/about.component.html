@@ -34,7 +34,7 @@
 
   <div class="about-content">
     <div class="about-content-text" [@slideInOut]="selectedIndex">
-      {{ contents[selectedIndex] }}
+      <div [innerHTML]="contents[selectedIndex]"></div>
     </div>
   </div>
 </section>

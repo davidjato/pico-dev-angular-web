@@ -13,9 +13,9 @@
             </button>
             <ul class="nav-links" [class.open]="menuOpen">
                 <li><a (click)="scrollToSection('home'); closeMenu()" class="active">Home</a></li>
-                <li><a (click)="scrollToSection('who'); closeMenu()">Who</a></li>
-                <li><a (click)="scrollToSection('where'); closeMenu()">Where</a></li>
-                <li><a (click)="scrollToSection('collab'); closeMenu()">Collab</a></li>
+                <li><a (click)="scrollToSection('who'); closeMenu()">Why</a></li>
+                <li><a (click)="scrollToSection('where'); closeMenu()">Core</a></li>
+                <li><a (click)="scrollToSection('collab'); closeMenu()">JOIN</a></li>
                 <li class="lang-mobile" *ngIf="menuOpen">
                     <div class="lang-switcher">
                         <button type="button" [class.active]="currentLang === 'en'"

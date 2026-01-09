@@ -33,8 +33,16 @@ export class ComingSoonCountdown3D {
     private baseFloorColor = new THREE.Color(0x0a0f14);
     private animationId: number | null = null;
     private guiInitialized = false;
+    private resizeRaf = 0;
+    private frameCount = 0;
+    private canvasRestoreObserver: MutationObserver | null = null;
 
     constructor(private options: ComingSoonCountdownOptions) {
+        // No ejecutar en SSR
+        if (typeof window === 'undefined' || typeof document === 'undefined') {
+            console.warn('⚠️ COMING-SOON: Ejecutándose en servidor (SSR), saltando inicialización');
+            return;
+        }
         this.init();
     }
 
@@ -262,7 +270,9 @@ export class ComingSoonCountdown3D {
     };
 
     private init() {
+        console.log('🎬 COMING-SOON: Iniciando Three.js');
         const container = this.options.container;
+        console.log('📦 COMING-SOON: Contenedor:', container);
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog(0x05070c, 120, 220);
         const aspect = window.innerWidth / window.innerHeight;
@@ -280,17 +290,112 @@ export class ComingSoonCountdown3D {
         this.camera.updateProjectionMatrix();
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        const dpr = isMobile
+            ? Math.min(window.devicePixelRatio || 1, 1.5)
+            : Math.min(window.devicePixelRatio || 1, 2);
+        this.renderer.setPixelRatio(dpr);
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.renderer.toneMappingExposure = 1.2;
-        container.appendChild(this.renderer.domElement);
+
+        // Forzar estilos inline para iOS con !important
+        const canvas = this.renderer.domElement;
+        canvas.style.setProperty('display', 'block', 'important');
+        canvas.style.setProperty('width', '100%', 'important');
+        canvas.style.setProperty('height', '100%', 'important');
+        canvas.style.setProperty('position', 'absolute', 'important');
+        canvas.style.setProperty('top', '0', 'important');
+        canvas.style.setProperty('left', '0', 'important');
+        canvas.style.setProperty('visibility', 'visible', 'important');
+        canvas.style.setProperty('opacity', '1', 'important');
+        canvas.style.setProperty('z-index', '1', 'important');
+        canvas.style.setProperty('pointer-events', 'none', 'important'); // Cambiar a 'none' para permitir scroll
+        
+        // Forzar estilos en el contenedor también con !important
+        container.style.setProperty('display', 'block', 'important');
+        container.style.setProperty('visibility', 'visible', 'important');
+        container.style.setProperty('opacity', '1', 'important');
+        container.style.setProperty('position', 'absolute', 'important');
+        
+        // Forzar estilos en el SECTION parent (#collab)
+        const section = container.parentElement;
+        if (section) {
+            section.style.setProperty('display', 'block', 'important');
+            section.style.setProperty('visibility', 'visible', 'important');
+            section.style.setProperty('opacity', '1', 'important');
+            section.style.setProperty('position', 'relative', 'important');
+            section.style.setProperty('width', '100%', 'important');
+            section.style.setProperty('height', '100vh', 'important');
+            section.style.setProperty('overflow', 'visible', 'important');
+            console.log('✅ COMING-SOON: Estilos forzados en SECTION', section.tagName, section.id);
+        }
+        
+        // Forzar estilos en feature-coming-soon (host component)
+        const featureComingSoon = section?.parentElement;
+        if (featureComingSoon && featureComingSoon.tagName.toLowerCase() === 'feature-coming-soon') {
+            featureComingSoon.style.setProperty('display', 'block', 'important');
+            featureComingSoon.style.setProperty('visibility', 'visible', 'important');
+            featureComingSoon.style.setProperty('opacity', '1', 'important');
+            featureComingSoon.style.setProperty('width', '100%', 'important');
+            featureComingSoon.style.setProperty('height', '100vh', 'important');
+            console.log('✅ COMING-SOON: Estilos forzados en feature-coming-soon');
+        }
+
+        container.appendChild(canvas);
+        console.log('✅ COMING-SOON: Canvas agregado. Dimensiones:', canvas.width, 'x', canvas.height);
+        console.log('🎨 COMING-SOON: Estilos del canvas:', {
+            display: canvas.style.display,
+            width: canvas.style.width,
+            height: canvas.style.height
+        });
+
+        // Agregar MutationObserver para detectar cambios de estilos
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const target = mutation.target as HTMLElement;
+                    const rect = target.getBoundingClientRect();
+                    if (rect.width === 0 || rect.height === 0) {
+                        console.error('🚨 MUTATION DETECTED: Elemento colapsado a 0x0:', {
+                            tag: target.tagName,
+                            id: target.id,
+                            classes: target.className,
+                            computedDisplay: getComputedStyle(target).display,
+                            computedWidth: getComputedStyle(target).width,
+                            computedHeight: getComputedStyle(target).height
+                        });
+                        
+                        // Forzar dimensiones inmediatamente
+                        if (target.tagName === 'SECTION') {
+                            target.style.setProperty('width', '100%', 'important');
+                            target.style.setProperty('height', '100vh', 'important');
+                            target.style.setProperty('display', 'block', 'important');
+                            console.warn('🔧 FORCED SECTION dimensions');
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Observar el SECTION y todos sus ancestros (reusar la variable ya declarada arriba)
+        if (section) {
+            observer.observe(section, { attributes: true, attributeFilter: ['style'] });
+            const featureComingSoon = section.parentElement;
+            if (featureComingSoon) {
+                observer.observe(featureComingSoon, { attributes: true, attributeFilter: ['style'] });
+            }
+        }
+
+        // Context loss handlers para iOS
+        this.attachContextLossHandlers();
+        
+        // Vigilante anti-SSR: detectar si el canvas es removido del DOM
+        this.setupCanvasRestoreObserver();
+        
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableRotate = false;
         this.controls.enablePan = false;
+        this.controls.enableZoom = false; // Deshabilitar zoom
         this.controls.enableDamping = true;
-        this.controls.zoomSpeed = 0.8;
-        this.controls.minZoom = 0.05;
-        this.controls.maxZoom = 3;
         this.controls.target.set(0, 0, 0);
         this.controls.update();
         this.composer = new EffectComposer(this.renderer);
@@ -314,7 +419,39 @@ export class ComingSoonCountdown3D {
             this.secondBoxes.push(p);
         }
         this.layout();
-        window.addEventListener('resize', this.onResize);
+
+        // iOS: resize real al hacer scroll (URL bar)
+        window.addEventListener('resize', this.requestResize, { passive: true });
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', this.requestResize, { passive: true });
+            window.visualViewport.addEventListener('scroll', this.requestResize, { passive: true });
+        }
+        
+        // DEBUG: Detectar scroll en mobile
+        if (isMobile) {
+            window.addEventListener('scroll', () => {
+                const canvas = this.renderer.domElement;
+                const section = this.options.container.parentElement;
+                const sectionRect = section?.getBoundingClientRect();
+                const canvasRect = canvas.getBoundingClientRect();
+                const computedCanvas = getComputedStyle(canvas);
+                
+                console.log('📜 MOBILE SCROLL:', {
+                    scrollY: window.scrollY,
+                    sectionTop: sectionRect?.top,
+                    sectionBottom: sectionRect?.bottom,
+                    canvasTop: canvasRect.top,
+                    canvasBottom: canvasRect.bottom,
+                    canvasInViewport: canvasRect.top < window.innerHeight && canvasRect.bottom > 0,
+                    canvasDisplay: computedCanvas.display,
+                    canvasVisibility: computedCanvas.visibility,
+                    canvasOpacity: computedCanvas.opacity,
+                    canvasZIndex: computedCanvas.zIndex,
+                    canvasPosition: computedCanvas.position
+                });
+            }, { passive: true });
+        }
+
         this.animate();
         // Añadir GUI para color y zoom (debe ir después de inicializar cámara y escena)
         this.addGUIControls();
@@ -328,9 +465,20 @@ export class ComingSoonCountdown3D {
             (this.floor.material as THREE.Material).dispose?.();
         }
         const floorGeo = new THREE.PlaneGeometry(2000, 2000);
-        const dpr = Math.min(window.devicePixelRatio, 2);
-        const texW = Math.max(128, Math.floor(window.innerWidth * dpr * this.reflectResolutionScale));
-        const texH = Math.max(128, Math.floor(window.innerHeight * dpr * this.reflectResolutionScale));
+
+        // Usar visualViewport para dimensiones reales en iOS
+        const vv = window.visualViewport;
+        const width = vv?.width ?? window.innerWidth;
+        const height = vv?.height ?? window.innerHeight;
+        const isMobile = width <= 900;
+
+        // Cap DPR consistente con el resto del código
+        const dpr = isMobile
+            ? Math.min(window.devicePixelRatio || 1, 1.5)
+            : Math.min(window.devicePixelRatio || 1, 2);
+
+        const texW = Math.max(128, Math.floor(width * dpr * this.reflectResolutionScale));
+        const texH = Math.max(128, Math.floor(height * dpr * this.reflectResolutionScale));
         this.floor = new Reflector(floorGeo, {
             textureWidth: texW,
             textureHeight: texH,
@@ -470,31 +618,360 @@ export class ComingSoonCountdown3D {
         }
     }
 
+    private requestResize = () => {
+        if (this.resizeRaf) return;
+        this.resizeRaf = requestAnimationFrame(() => {
+            this.resizeRaf = 0;
+            this.onResize();
+        });
+    };
+
     private onResize = () => {
-        const aspect = window.innerWidth / window.innerHeight;
+        const vv = window.visualViewport;
+        const width = vv?.width ?? window.innerWidth;
+        const height = vv?.height ?? window.innerHeight;
+
+        // Prevenir resize si las dimensiones son inválidas
+        if (width < 100 || height < 100) {
+            console.warn('⚠️ Dimensiones inválidas detectadas en countdown, saltando resize:', width, height);
+            return;
+        }
+
+        const aspect = width / height;
         this.camera.left = -this.orthoSize * aspect;
         this.camera.right = this.orthoSize * aspect;
         this.camera.top = this.orthoSize;
         this.camera.bottom = -this.orthoSize;
+
         // Alejar más la cámara y reducir zoom en mobile también al redimensionar
-        const isMobile = window.innerWidth <= 900;
+        const isMobile = width <= 900;
         this.camera.zoom = isMobile ? 0.28 : 0.44;
         const cameraZ = isMobile ? 250 : 120;
         this.camera.position.z = cameraZ;
         this.camera.updateProjectionMatrix();
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.composer.setSize(window.innerWidth, window.innerHeight);
+
+        // Cap DPR también en resize
+        const dpr = isMobile
+            ? Math.min(window.devicePixelRatio || 1, 1.5)
+            : Math.min(window.devicePixelRatio || 1, 2);
+        this.renderer.setPixelRatio(dpr);
+
+        this.renderer.setSize(width, height, false);
+        this.composer.setSize(width, height);
+        
+        // Re-aplicar estilos para prevenir que iOS oculte el canvas
+        const canvas = this.renderer.domElement;
+        canvas.style.display = 'block';
+        canvas.style.visibility = 'visible';
+        canvas.style.opacity = '1';
+        canvas.style.zIndex = '1';
+        
+        console.log('✅ COMING-SOON: Resize completado - Canvas:', {
+            width: canvas.width,
+            height: canvas.height,
+            display: canvas.style.display,
+            visible: canvas.offsetParent !== null
+        });
+        
         this.buildFloor();
         this.layout();
     };
 
+    private attachContextLossHandlers(): void {
+        const canvas = this.renderer.domElement;
+
+        canvas.addEventListener(
+            'webglcontextlost',
+            (e: Event) => {
+                e.preventDefault();
+                if (this.animationId) cancelAnimationFrame(this.animationId);
+                console.warn('⚠️ WebGL context lost (iOS/Safari) - Coming Soon.');
+            },
+            false
+        );
+
+        canvas.addEventListener(
+            'webglcontextrestored',
+            () => {
+                console.warn('✅ WebGL context restored - Coming Soon.');
+                // Asegurar que el canvas sea visible
+                canvas.style.display = 'block';
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                // Reanuda el loop y fuerza resize para reestablecer targets del composer
+                setTimeout(() => {
+                    this.requestResize();
+                    this.animate();
+                }, 50);
+            },
+            false
+        );
+    }
+
+    private setupCanvasRestoreObserver(): void {
+        const canvas = this.renderer.domElement;
+        const isMobile = window.innerWidth <= 900;
+        
+        if (!isMobile) return; // Solo en mobile
+        
+        console.log('🔍 MOBILE: Iniciando vigilante anti-SSR del canvas');
+        
+        // Observar si el canvas es removido del contenedor
+        this.canvasRestoreObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'childList') {
+                    mutation.removedNodes.forEach((node) => {
+                        if (node === canvas) {
+                            console.warn('🚨 MOBILE: Canvas REMOVIDO del DOM - Restaurando...');
+                            // Restaurar inmediatamente
+                            if (!this.options.container.contains(canvas)) {
+                                this.options.container.appendChild(canvas);
+                                console.log('✅ MOBILE: Canvas restaurado al contenedor');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Observar el contenedor
+        this.canvasRestoreObserver.observe(this.options.container, {
+            childList: true,
+            subtree: false
+        });
+    }
+
     private animate = () => {
+        // ✅ Programar el siguiente frame PRIMERO
         this.animationId = requestAnimationFrame(this.animate);
+
+        // Protección contra context loss y canvas inválido
+        if (!this.renderer || !this.composer) {
+            console.warn('⚠️ COMING-SOON: Renderer o composer no disponible');
+            return;
+        }
+        
+        // Verificar que el canvas tenga dimensiones válidas
+        const canvas = this.renderer.domElement;
+        if (!canvas || canvas.width === 0 || canvas.height === 0) {
+            console.warn('⚠️ COMING-SOON: Canvas inválido o con dimensiones 0');
+            return;
+        }
+        
+        // ✅ Verificar si el canvas fue removido del DOM y re-agregarlo
+        if (!this.options.container.contains(canvas)) {
+            console.warn('⚠️ COMING-SOON: Canvas removido del DOM, re-agregando...');
+            this.options.container.appendChild(canvas);
+            // Re-aplicar estilos
+            canvas.style.display = 'block';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.position = 'absolute';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.visibility = 'visible';
+            canvas.style.opacity = '1';
+            canvas.style.zIndex = '1';
+            
+            // Forzar estilos en el contenedor también
+            this.options.container.style.display = 'block';
+            this.options.container.style.visibility = 'visible';
+            this.options.container.style.opacity = '1';
+        }
+        
+        // ✅ MOBILE: Forzar estilos SIEMPRE en cada frame para prevenir SSR
+        const isMobile = window.innerWidth <= 900;
+        if (isMobile) {
+            // Verificar que el canvas esté en el DOM
+            if (!this.options.container.contains(canvas)) {
+                console.warn('🚨 MOBILE ANIMATE: Canvas NO está en el DOM - Restaurando...');
+                this.options.container.appendChild(canvas);
+            }
+            
+            // Forzar canvas SIEMPRE en cada frame
+            canvas.style.setProperty('display', 'block', 'important');
+            canvas.style.setProperty('visibility', 'visible', 'important');
+            canvas.style.setProperty('opacity', '1', 'important');
+            canvas.style.setProperty('position', 'absolute', 'important');
+            canvas.style.setProperty('top', '0', 'important');
+            canvas.style.setProperty('left', '0', 'important');
+            canvas.style.setProperty('width', '100%', 'important');
+            canvas.style.setProperty('height', '100%', 'important');
+            canvas.style.setProperty('z-index', '1', 'important');
+            canvas.style.setProperty('pointer-events', 'none', 'important');
+            canvas.style.setProperty('transform', 'translateZ(0)', 'important');
+            canvas.style.setProperty('overflow', 'visible', 'important');
+            canvas.style.setProperty('contain', 'none', 'important');
+            canvas.style.setProperty('clip-path', 'none', 'important');
+            
+            // Forzar contenedor SIEMPRE
+            this.options.container.style.setProperty('display', 'block', 'important');
+            this.options.container.style.setProperty('visibility', 'visible', 'important');
+            this.options.container.style.setProperty('opacity', '1', 'important');
+            this.options.container.style.setProperty('position', 'absolute', 'important');
+            this.options.container.style.setProperty('top', '0', 'important');
+            this.options.container.style.setProperty('left', '0', 'important');
+            this.options.container.style.setProperty('width', '100%', 'important');
+            this.options.container.style.setProperty('height', '100%', 'important');
+            this.options.container.style.setProperty('pointer-events', 'none', 'important');
+            this.options.container.style.setProperty('transform', 'translateZ(0)', 'important');
+            this.options.container.style.setProperty('overflow', 'visible', 'important');
+            this.options.container.style.setProperty('contain', 'none', 'important');
+            this.options.container.style.setProperty('clip-path', 'none', 'important');
+            
+            // Forzar sección SIEMPRE
+            const section = this.options.container.parentElement;
+            if (section) {
+                section.style.setProperty('display', 'block', 'important');
+                section.style.setProperty('visibility', 'visible', 'important');
+                section.style.setProperty('opacity', '1', 'important');
+                section.style.setProperty('position', 'relative', 'important');
+                section.style.setProperty('width', '100%', 'important');
+                section.style.setProperty('height', '100vh', 'important');
+                section.style.setProperty('overflow', 'visible', 'important');
+                section.style.setProperty('transform', 'translateZ(0)', 'important');
+                section.style.setProperty('contain', 'none', 'important');
+                section.style.setProperty('clip-path', 'none', 'important');
+            }
+            
+            // Forzar host SIEMPRE
+            const featureComingSoon = section?.parentElement;
+            if (featureComingSoon && featureComingSoon.tagName.toLowerCase() === 'feature-coming-soon') {
+                featureComingSoon.style.setProperty('display', 'block', 'important');
+                featureComingSoon.style.setProperty('visibility', 'visible', 'important');
+                featureComingSoon.style.setProperty('opacity', '1', 'important');
+                featureComingSoon.style.setProperty('width', '100%', 'important');
+                featureComingSoon.style.setProperty('height', '100vh', 'important');
+                featureComingSoon.style.setProperty('overflow', 'visible', 'important');
+                featureComingSoon.style.setProperty('contain', 'none', 'important');
+            }
+        }
+        
+        // ✅ Verificar si el canvas se ha vuelto invisible y forzar visibilidad (fallback para desktop)
+        if (canvas.offsetParent === null && !isMobile) {
+            // Log para debug en mobile
+            const rect = canvas.getBoundingClientRect();
+            const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+            console.warn('⚠️ COMING-SOON: Canvas invisible - offsetParent null', {
+                rect: {top: rect.top, bottom: rect.bottom, height: rect.height},
+                inViewport: isInViewport,
+                windowHeight: window.innerHeight
+            });
+            console.warn('⚠️ COMING-SOON: Canvas invisible (offsetParent null), forzando visibilidad...');
+            canvas.style.setProperty('display', 'block', 'important');
+            canvas.style.setProperty('visibility', 'visible', 'important');
+            canvas.style.setProperty('opacity', '1', 'important');
+            canvas.style.setProperty('position', isMobile ? 'fixed' : 'absolute', 'important');
+            canvas.style.setProperty('z-index', '1', 'important');
+            canvas.style.setProperty('pointer-events', 'none', 'important'); // Cambiar a 'none' para permitir scroll
+            
+            // Forzar en contenedor
+            this.options.container.style.setProperty('display', 'block', 'important');
+            this.options.container.style.setProperty('visibility', 'visible', 'important');
+            this.options.container.style.setProperty('opacity', '1', 'important');
+            this.options.container.style.setProperty('position', 'absolute', 'important');
+            
+            // Forzar en SECTION parent
+            const section = this.options.container.parentElement;
+            if (section) {
+                section.style.setProperty('display', 'block', 'important');
+                section.style.setProperty('visibility', 'visible', 'important');
+                section.style.setProperty('opacity', '1', 'important');
+                section.style.setProperty('position', 'relative', 'important');
+                section.style.setProperty('width', '100%', 'important');
+                section.style.setProperty('height', '100vh', 'important');
+                section.style.setProperty('overflow', 'visible', 'important');
+            }
+            
+            // Forzar en feature-coming-soon
+            const featureComingSoon = section?.parentElement;
+            if (featureComingSoon && featureComingSoon.tagName.toLowerCase() === 'feature-coming-soon') {
+                featureComingSoon.style.setProperty('display', 'block', 'important');
+                featureComingSoon.style.setProperty('visibility', 'visible', 'important');
+                featureComingSoon.style.setProperty('opacity', '1', 'important');
+                featureComingSoon.style.setProperty('width', '100%', 'important');
+                featureComingSoon.style.setProperty('height', '100vh', 'important');
+                featureComingSoon.style.setProperty('min-width', '100vw', 'important');
+                featureComingSoon.style.setProperty('min-height', '100vh', 'important');
+            }
+        }
+        
         this.root.position.z = 0;
         this.updateCountdown();
         this.controls?.update();
         this.composer.render();
+        
+        // Log cada 60 frames
+        this.frameCount++;
+        if (this.frameCount === 1) {
+            console.log('🎨 COMING-SOON: Primer frame renderizado');
+            
+            // Verificar toda la cadena de padres
+            const parentChain: Array<{tag: string, classes: string, display: string, visibility: string, offsetParent: boolean}> = [];
+            let element: HTMLElement | null = canvas;
+            while (element) {
+                parentChain.push({
+                    tag: element.tagName,
+                    classes: element.className || '(none)',
+                    display: getComputedStyle(element).display,
+                    visibility: getComputedStyle(element).visibility,
+                    offsetParent: element.offsetParent !== null
+                });
+                element = element.parentElement;
+            }
+            
+            console.log('🔍 COMING-SOON: Estado inicial canvas:', {
+                inDOM: this.options.container.contains(canvas),
+                offsetParent: canvas.offsetParent !== null,
+                display: canvas.style.display,
+                visibility: canvas.style.visibility,
+                zIndex: canvas.style.zIndex,
+                width: canvas.width,
+                height: canvas.height,
+                containerDisplay: this.options.container.style.display,
+                containerVisibility: this.options.container.style.visibility
+            });
+            console.log('🔗 COMING-SOON: Cadena de elementos padres:', parentChain);
+        } else if (this.frameCount % 60 === 0) {
+            const inDOM = this.options.container.contains(canvas);
+            const visible = canvas.offsetParent !== null;
+            
+            // Si es invisible, mostrar la cadena de padres
+            if (!visible) {
+                const parentChain: Array<{tag: string, classes: string, display: string, visibility: string, offsetParent: boolean}> = [];
+                let element: HTMLElement | null = canvas;
+                while (element && parentChain.length < 10) {
+                    const computed = getComputedStyle(element);
+                    const rect = element.getBoundingClientRect();
+                    parentChain.push({
+                        tag: element.tagName,
+                        classes: element.className || '(none)',
+                        display: computed.display,
+                        visibility: computed.visibility,
+                        offsetParent: element.offsetParent !== null
+                    });
+                    
+                    // Log de la posición real del elemento
+                    if (element.tagName === 'SECTION' || (element.tagName === 'DIV' && element.className.includes('coming-soon-root'))) {
+                        const rect = element.getBoundingClientRect();
+                        console.warn(`⚠️ ${element.tagName} (#${element.id || 'no-id'}) rect:`, {
+                            top: rect.top,
+                            left: rect.left,
+                            width: rect.width,
+                            height: rect.height,
+                            bottom: rect.bottom,
+                            right: rect.right,
+                            inViewport: rect.top < window.innerHeight && rect.bottom > 0
+                        });
+                    }
+                    
+                    element = element.parentElement;
+                }
+                console.warn(`⚠️ COMING-SOON: Frame ${this.frameCount} - Canvas INVISIBLE - Cadena de padres:`, parentChain);
+            }
+            
+            console.log(`🔄 COMING-SOON: Frame ${this.frameCount} - Canvas visible: ${visible} Z-index: ${canvas.style.zIndex}${!visible ? ' ⚠️ INVISIBLE' : ''}${!inDOM ? ' ⚠️ NOT IN DOM' : ''}`);
+        }
     };
 
     public pause() {
@@ -511,19 +988,44 @@ export class ComingSoonCountdown3D {
     }
     public dispose() {
         if (this.animationId) cancelAnimationFrame(this.animationId);
-        window.removeEventListener('resize', this.onResize);
-        this.renderer.dispose();
-        this.composer.dispose();
-        this.controls?.dispose();
-        this.ALL_DIGIT_GROUPS.length = 0;
-        this.secondBoxes.length = 0;
-        this.root.clear();
-        if (this.floor) {
+        if (this.resizeRaf) cancelAnimationFrame(this.resizeRaf);
+        
+        // Desconectar observador de canvas
+        if (this.canvasRestoreObserver) {
+            this.canvasRestoreObserver.disconnect();
+            this.canvasRestoreObserver = null;
+        }
+
+        window.removeEventListener('resize', this.requestResize);
+        if (window.visualViewport) {
+            window.visualViewport.removeEventListener('resize', this.requestResize);
+            window.visualViewport.removeEventListener('scroll', this.requestResize);
+        }
+
+        if (this.renderer) {
+            this.renderer.dispose();
+        }
+        if (this.composer) {
+            this.composer.dispose();
+        }
+        if (this.controls) {
+            this.controls.dispose();
+        }
+        if (this.ALL_DIGIT_GROUPS) {
+            this.ALL_DIGIT_GROUPS.length = 0;
+        }
+        if (this.secondBoxes) {
+            this.secondBoxes.length = 0;
+        }
+        if (this.root) {
+            this.root.clear();
+        }
+        if (this.floor && this.scene) {
             this.scene.remove(this.floor);
             this.floor.geometry?.dispose?.();
             (this.floor.material as THREE.Material).dispose?.();
         }
-        if (this.options.container.contains(this.renderer.domElement)) {
+        if (this.renderer && this.options.container.contains(this.renderer.domElement)) {
             this.options.container.removeChild(this.renderer.domElement);
         }
     }

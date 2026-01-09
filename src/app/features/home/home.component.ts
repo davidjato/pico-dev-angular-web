@@ -9,6 +9,7 @@ import {
   ViewChild,
   PLATFORM_ID,
   inject,
+  afterNextRender,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -40,6 +41,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    // Esperar a que Angular termine el hydration antes de inicializar Three.js
+    if (this.isBrowser) {
+      afterNextRender(() => {
+        console.log('🎬 HOME: afterNextRender - Iniciando Three.js después del hydration');
+        this.initThree();
+        this.initGUI();
+      });
+    }
   }
 
   @ViewChild('rendererContainer', { static: true })
@@ -53,6 +63,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   private clock = new THREE.Clock();
   private animationFrameId = 0;
+  private frameCount = 0;
 
   private modelRoot?: THREE.Object3D;
   private glowLight?: THREE.PointLight;
@@ -103,8 +114,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (!this.isBrowser) return;
 
-    this.initThree();
-    this.initGUI();
+    // Móvil: sin animación, valores fijos
+    if (this.isMobileView) {
+      this.controls.cameraZ = 15;
+      this.controls.bloomStrength = 0.21;
+      this.controls.exposure = 1.35;
+      this.neonColorHex = '#FF7A00';
+      this.onControlsChange();
+      return; // Salir sin configurar scroll handler
+    }
 
     // Desktop: animación entrada + scroll
     if (!this.isMobileView) {
@@ -268,8 +286,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const vw = vv?.width ?? window.innerWidth;
     const vh = vv?.height ?? window.innerHeight;
 
-    const width = Math.max(1, Math.floor(rect.width || vw));
-    const height = Math.max(1, Math.floor(rect.height || vh));
+    // Forzar mínimo 50px para prevenir canvas invisible (100px era muy restrictivo en iOS)
+    const width = Math.max(50, Math.floor(rect.width || vw));
+    const height = Math.max(50, Math.floor(rect.height || vh));
 
     return { width, height };
   }
@@ -277,8 +296,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private initThree(): void {
     if (!this.isBrowser) return;
 
+    console.log('🎬 HOME: Iniciando Three.js');
+
     const { width, height } = this.getContainerSize();
+    console.log('📐 HOME: Dimensiones del contenedor:', { width, height });
     this.isMobileView = width < 900;
+    console.log('📱 HOME: isMobileView =', this.isMobileView);
 
     // ✅ Mobile: valores visibles SIEMPRE (no dependas de la animación)
     if (this.isMobileView) {
@@ -288,11 +311,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.controls.bloomThreshold = 0;
 
       this.controls.cameraX = 0;
-      this.controls.cameraY = 0;
-      this.controls.cameraZ = 16;
+      this.controls.cameraY = 3.5; // Subir cámara para que logo se vea más abajo
+      this.controls.cameraZ = 10; // Acercar más la cámara al logo
       this.controls.cameraRotX = 0;
       this.controls.cameraRotY = 0;
       this.controls.cameraRotZ = 0;
+
+      // Logo recto en móvil
+      this.controls.rotationX = 0;
+      this.controls.rotationY = 0;
+      this.controls.rotationZ = 0;
     }
 
     this.scene = new THREE.Scene();
@@ -312,7 +340,59 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = this.controls.exposure;
 
-    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+    // ✅ Forzar estilos inline para iOS
+    const canvas = this.renderer.domElement;
+    canvas.style.display = 'block';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '0';
+    canvas.style.visibility = 'visible';
+    canvas.style.opacity = '1';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.pointerEvents = 'none';
+
+    // Marcar para que Angular no lo limpie
+    canvas.setAttribute('data-threejs-canvas', 'true');
+    canvas.setAttribute('ngSkipHydration', 'true');
+    canvas.setAttribute('data-home-canvas', 'true');
+
+    // ✅ IMPORTANTE: pointer-events none para no bloquear clics en botones/textos
+    canvas.style.pointerEvents = 'none';
+
+    // Forzar estilos en el contenedor también
+    this.rendererContainer.nativeElement.style.display = 'block';
+    this.rendererContainer.nativeElement.style.visibility = 'visible';
+    this.rendererContainer.nativeElement.style.opacity = '1';
+    this.rendererContainer.nativeElement.style.position = 'absolute';
+    this.rendererContainer.nativeElement.style.inset = '0';
+    this.rendererContainer.nativeElement.style.zIndex = '0';
+    this.rendererContainer.nativeElement.style.pointerEvents = 'none';
+
+    // Agregar al contenedor original
+    this.rendererContainer.nativeElement.appendChild(canvas);
+    console.log('✅ HOME: Canvas agregado al contenedor');
+
+    // Verificar estilos del contenedor y canvas después de agregar
+    setTimeout(() => {
+      const containerStyles = window.getComputedStyle(this.rendererContainer.nativeElement);
+      const canvasStyles = window.getComputedStyle(canvas);
+      console.log('🔍 HOME: Verificación post-init:', {
+        containerDisplay: containerStyles.display,
+        containerVisibility: containerStyles.visibility,
+        containerOpacity: containerStyles.opacity,
+        containerZIndex: containerStyles.zIndex,
+        canvasDisplay: canvasStyles.display,
+        canvasVisibility: canvasStyles.visibility,
+        canvasOpacity: canvasStyles.opacity,
+        canvasZIndex: canvasStyles.zIndex,
+        canvasInDOM: document.contains(canvas),
+        canvasVisible: canvas.offsetParent !== null,
+        containerChildren: this.rendererContainer.nativeElement.children.length
+      });
+    }, 100);
 
     // ✅ context loss handlers (por si Safari lo pierde al scroll/resize)
     this.attachContextLossHandlers();
@@ -366,6 +446,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     this.loadModelFromUrl('assets/threejs/logo.glb');
+    console.log('🎬 HOME: Iniciando loop de animación...');
     this.ngZone.runOutsideAngular(() => this.animate());
   }
 
@@ -391,15 +472,67 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   private animate = () => {
+    // ✅ Programar el siguiente frame PRIMERO (antes de cualquier return)
+    this.animationFrameId = requestAnimationFrame(this.animate);
+
     if (!this.isBrowser) return;
+
+    // Protección contra context loss y canvas inválido
+    if (!this.renderer || !this.composer) {
+      console.warn('⚠️ HOME: Renderer o composer no disponible');
+      return;
+    }
+
+    // ✅ CRÍTICO: Verificar si el canvas fue removido del DOM y re-agregarlo
+    const canvas = this.renderer.domElement;
+    if (!document.contains(canvas)) {
+      console.warn('🔧 HOME: Canvas removido del DOM, re-agregando...');
+      this.rendererContainer.nativeElement.appendChild(canvas);
+    }
+
+    // 🔥 FORZAR ESTILOS EN CADA FRAME (iOS Safari puede resetearlos)
+    canvas.style.display = 'block';
+    canvas.style.visibility = 'visible';
+    canvas.style.opacity = '1';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '0';
+    canvas.style.pointerEvents = 'none';
+
+    // Forzar estilos del contenedor también
+    this.rendererContainer.nativeElement.style.position = 'absolute';
+    this.rendererContainer.nativeElement.style.inset = '0';
+    this.rendererContainer.nativeElement.style.zIndex = '0';
+    this.rendererContainer.nativeElement.style.pointerEvents = 'none';
+
+    // Verificar que el canvas tenga dimensiones válidas
+    if (canvas.width === 0 || canvas.height === 0) {
+      console.warn('⚠️ HOME: Canvas con dimensiones 0, saltando frame');
+      return;
+    }
 
     const elapsed = this.clock.getElapsedTime();
     this.clock.getDelta();
 
+    // ✅ Forzar valores de cámara en móvil (evitar que otros cambios los sobrescriban)
+    if (this.isMobileView) {
+      this.controls.cameraX = -5;
+      this.controls.cameraY = 1.5; // Subir cámara para que logo se vea más abajo
+      this.controls.cameraZ = 10; // Acercar la cámara al logo
+    }
+
     this.camera.position.set(this.controls.cameraX, this.controls.cameraY, this.controls.cameraZ);
 
     if (this.isMobileView) {
-      this.camera.lookAt(0, 0, 0);
+      // Hacer que la cámara mire al modelo en móvil
+      if (this.modelRoot) {
+        this.camera.lookAt(this.modelRoot.position);
+      } else {
+        this.camera.lookAt(0, 0, 0);
+      }
     } else {
       this.camera.rotation.set(
         THREE.MathUtils.degToRad(this.controls.cameraRotX),
@@ -415,9 +548,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     if (this.modelRoot) {
       if (this.isMobileView) {
-        this.modelRoot.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
-        this.modelRoot.rotation.y = 0;
-        this.modelRoot.rotation.z = THREE.MathUtils.degToRad(this.controls.rotationZ);
+        // ✅ Móvil: mantener logo completamente recto (0, 0, 0)
+        this.modelRoot.rotation.set(0, 0, 0);
+
+        // ✅ Cámara siempre mirando al logo en móvil
+        const modelPos = new THREE.Vector3();
+        this.modelRoot.getWorldPosition(modelPos);
+        this.camera.lookAt(modelPos);
       } else {
         this.modelRoot.rotation.x = THREE.MathUtils.degToRad(this.controls.rotationX);
         this.modelRoot.rotation.y = THREE.MathUtils.degToRad(this.controls.rotationY);
@@ -442,18 +579,54 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     this.composer.render();
-    this.animationFrameId = requestAnimationFrame(this.animate);
+
+    // Log cada 60 frames (1 segundo aprox)
+    this.frameCount++;
+    if (this.frameCount === 1) {
+      console.log('🎨 HOME: Primer frame renderizado');
+      console.log('📍 HOME: Estado de la escena:', {
+        hasModelRoot: !!this.modelRoot,
+        sceneChildren: this.scene.children.length,
+        cameraPosition: `(${this.camera.position.x.toFixed(1)}, ${this.camera.position.y.toFixed(1)}, ${this.camera.position.z.toFixed(1)})`,
+        exposure: this.controls.exposure,
+        bloomStrength: this.controls.bloomStrength
+      });
+    } else if (this.frameCount % 60 === 0) {
+      const rect = this.renderer.domElement.getBoundingClientRect();
+      const computedStyle = window.getComputedStyle(this.renderer.domElement);
+      console.log(`🔄 HOME: Frame ${this.frameCount} - Canvas:`, JSON.stringify({
+        visibleDOM: this.renderer.domElement.offsetParent !== null,
+        zIndex: computedStyle.zIndex,
+        position: computedStyle.position,
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        rect: { x: Math.round(rect.x), y: Math.round(rect.y), w: Math.round(rect.width), h: Math.round(rect.height) },
+        hasModel: !!this.modelRoot,
+        sceneChildren: this.scene.children.length
+      }));
+    }
   };
 
   private loadModelFromUrl(url: string, onDone?: () => void): void {
     const loader = new GLTFLoader();
+    console.log('🔄 HOME: Cargando modelo desde:', url);
 
     loader.load(
       url,
       (gltf) => {
+        console.log('✅ HOME: Modelo cargado exitosamente');
         if (this.modelRoot) this.scene.remove(this.modelRoot);
 
         this.modelRoot = gltf.scene;
+
+        // Escalar modelo y centrar para móvil
+        console.log('📦 HOME: Modelo -', JSON.stringify({
+          position: { x: this.modelRoot.position.x, y: this.modelRoot.position.y, z: this.modelRoot.position.z },
+          scale: { x: this.modelRoot.scale.x, y: this.modelRoot.scale.y, z: this.modelRoot.scale.z },
+          rotation: { x: this.modelRoot.rotation.x, y: this.modelRoot.rotation.y, z: this.modelRoot.rotation.z },
+          isMobile: this.isMobileView
+        }));
 
         // centrar en origen
         const box = new THREE.Box3().setFromObject(this.modelRoot);
@@ -461,32 +634,43 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.modelRoot.position.sub(center);
 
         this.scene.add(this.modelRoot);
+        console.log('🎭 HOME: Modelo agregado a la escena');
 
         // neón
         this.applyNeonToExistingMaterials(this.modelRoot);
         this.applyNeonColor();
         this.applyEmissiveIntensity(this.controls.baseEmissive);
 
+        console.log('💡 HOME: Materiales neón aplicados, emissive:', this.controls.baseEmissive);
+
         if (this.isMobileView) {
-          // Centra el modelo en el origen
+          // ✅ Móvil SOLAMENTE: centrar, ajustar posición y escala
           const box2 = new THREE.Box3().setFromObject(this.modelRoot);
           const center2 = box2.getCenter(new THREE.Vector3());
           this.modelRoot.position.sub(center2);
 
-          // Resetea rotaciones para que el logo salga recto
+          // Resetear rotaciones para que el logo salga recto
           this.modelRoot.rotation.set(0, 0, 0);
 
-          // Ajuste de posición (tu setup)
+          // Ajuste de posición para móvil - logo más abajo en pantalla
           const size = box2.getSize(new THREE.Vector3());
-          this.modelRoot.position.y += size.y * 2.6;
+          this.modelRoot.position.y += size.y * 0.5; // Reducido para bajar el logo en pantalla
           this.modelRoot.position.x += size.x * -1.08;
 
-          // Aleja cámara con margen (tu setup)
-          this.fitCameraToObject(this.modelRoot, 7);
-          this.onControlsChange();
-        } else {
-          this.modelRoot.position.y = this.modelRoot.position.y + 0.5;
+          // Escala más grande en móvil
+          this.modelRoot.scale.set(1.5, 1.5, 1.5);
+
+          // Usar la posición de cámara ya configurada en initThree (Z=10)
+          this.camera.position.set(this.controls.cameraX, this.controls.cameraY, this.controls.cameraZ);
+          this.camera.lookAt(this.modelRoot.position);
+          this.camera.updateProjectionMatrix();
+
+          console.log('📱 HOME: Modelo configurado para móvil en:', this.modelRoot.position);
+          console.log('📷 HOME: Cámara móvil en Z =', this.controls.cameraZ);
         }
+        // Desktop: no hace nada, el modelo ya está centrado en el origen
+
+        this.onControlsChange();
 
         onDone?.();
       },
@@ -519,6 +703,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     if (!this.camera || !this.renderer || !this.composer) return;
 
     const { width, height } = this.getContainerSize();
+    console.log('📏 HOME: onWindowResize - Dimensiones:', { width, height });
+
+    // Prevenir resize solo si las dimensiones son realmente inválidas
+    if (width < 50 || height < 50) {
+      console.warn('⚠️ HOME: Dimensiones demasiado pequeñas, saltando resize:', width, height);
+      return;
+    }
+
     const prevMobile = this.isMobileView;
     this.isMobileView = width < 900;
 
@@ -535,6 +727,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     this.renderer.setSize(width, height, false);
     this.composer.setSize(width, height);
+
+    // Re-aplicar estilos para prevenir que iOS oculte el canvas
+    const canvas = this.renderer.domElement;
+    canvas.style.display = 'block';
+    canvas.style.visibility = 'visible';
+    canvas.style.opacity = '1';
+    canvas.style.zIndex = '1';
+
+    // Forzar que el contenedor también sea visible
+    this.rendererContainer.nativeElement.style.display = 'block';
+    this.rendererContainer.nativeElement.style.visibility = 'visible';
+    this.rendererContainer.nativeElement.style.opacity = '1';
+
+    console.log('✅ HOME: Resize completado - Canvas:', {
+      width: canvas.width,
+      height: canvas.height,
+      display: canvas.style.display,
+      visible: canvas.offsetParent !== null
+    });
 
     // si estamos en mobile y ya hay modelo, re-encuadra
     if (this.isMobileView && this.modelRoot) {
@@ -565,9 +776,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       'webglcontextrestored',
       () => {
         console.warn('✅ WebGL context restored.');
+        // Asegurar que el canvas sea visible
+        canvas.style.display = 'block';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
         // Reanuda el loop y fuerza resize para reestablecer targets del composer
-        this.requestResize();
-        this.ngZone.runOutsideAngular(() => this.animate());
+        setTimeout(() => {
+          this.requestResize();
+          this.ngZone.runOutsideAngular(() => this.animate());
+        }, 50);
       },
       false
     );

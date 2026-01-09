@@ -101,10 +101,88 @@ export class AboutComponent implements OnInit {
   ];
   selectedIndex = 0;
   contents = [
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    `<p>
+    Picollect was born from a simple observation.
+</p>
+<p>
+    In a city that moves fast, celebration often becomes routine and emotional well-being is often left in the background.
+</p>
+<p>
+    We gather.
+</p>
+<p>
+    We attend.
+</p>
+<p>
+    We keep moving.
+</p>
+<p>
+    But behind the music, many people feel overwhelmed, disconnected, or alone.
+</p>
+<p>
+    Picollect exists to create spaces where people can breathe again.
+</p>
+<p>
+    Where music becomes a bridge.
+</p>
+<p>
+    Where connection is intentional.
+</p>
+<p>
+    And where celebration acknowledges mental health &nbsp;not as a campaign, but as a human reality.
+</p>
+`,
+    `<p>
+    Our mission is to bring people together through meaningful celebration.
+</p>
+<p>
+    We create music-driven experiences that encourage presence, openness, and real connection.
+</p>
+<p>
+    Moments where people don’t just dance next to each other, but feel part of something shared.
+</p>
+<p>
+    Mental health is at the core of what we do through visibility, direct action, and long-term commitment.
+</p>`,
+    `<p>
+    We imagine a culture where celebration creates impact.
+</p>
+<p>
+    Where events are not defined by scale, but by how they make people feel.
+</p>
+<p>
+    Where music raises awareness, community creates belonging, and purpose becomes part of nightlife.
+</p>
+<p>
+    Our vision is to grow Picollect into a platform that connects artists, communities, and causes, redefining how we celebrate in Luxembourg and beyond.
+</p>`,
+    `<p>
+    We believe celebration is a responsibility.
+</p>
+<p>
+    We believe music is a language.
+</p>
+<p>
+    We believe people come before performance.
+</p>
+<p>
+    We believe in moments over metrics.
+</p>
+<p>
+    In energy over excess.
+</p>
+<p>
+    In connection over consumption.
+</p>
+<p>
+    We believe mental health deserves care, access, and visibility — and that joy and awareness can coexist.
+</p>
+<p>
+    Picollect is not just something you attend.
+</p>
+<p>
+    It’s something you stand for.
+</p>`
   ];
 
   selectOption(index: number) {

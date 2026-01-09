@@ -23,7 +23,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     importProvidersFrom(
       TranslateModule.forRoot({
-        fallbackLang: 'es',
+        defaultLanguage: 'es',
       })
     ),
     ...provideTranslateHttpLoader({

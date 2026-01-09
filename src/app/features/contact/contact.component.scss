@@ -7,24 +7,33 @@
     height: 40vh;
     margin: 0 !important;
     z-index: 1 !important;
-    opacity: 0.4;
+    opacity: 1;
     pointer-events: none;
   }
 
   .left-hand {
-    left: -20vw;
+    left: -45vw;
 
     right: auto;
   }
 
   .right-hand {
-    right: -20vw;
+    right: -45vw;
     left: auto;
   }
 
   .contact-content {
     position: relative;
     z-index: 2 !important;
+    margin: 0 10vw;
+
+    .contact-title {
+      font-size: 1.5rem;
+    }
+
+    .contact-subtitle {
+      display: none;
+    }
   }
 }
 

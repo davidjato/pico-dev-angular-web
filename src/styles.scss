@@ -39,4 +39,16 @@ body {
 	scrollbar-color: #FF7A00 #171717;
 }
 
+/* Force coming-soon component visibility */
+feature-coming-soon {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+	position: relative !important;
+	width: 100% !important;
+	height: 100vh !important;
+	min-width: 100vw !important;
+	min-height: 100vh !important;
+}
+
 /* You can add global styles to this file, and also import other style files */

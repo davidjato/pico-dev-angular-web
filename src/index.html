@@ -31,6 +31,78 @@
   <meta name="twitter:image" content="https://picollect.com/assets/images/og-image.jpg" />
   <meta name="twitter:site" content="@picollect" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Eruda: Inspector de consola para mobile debugging -->
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>eruda.init();</script>
+  
+  <!-- Botón para copiar logs -->
+  <script>
+    window.addEventListener('load', () => {
+      // Capturar todos los logs
+      window.allLogs = [];
+      const originalLog = console.log;
+      const originalWarn = console.warn;
+      const originalError = console.error;
+      
+      console.log = function(...args) {
+        window.allLogs.push('[LOG] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+        originalLog.apply(console, args);
+      };
+      
+      console.warn = function(...args) {
+        window.allLogs.push('[WARN] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+        originalWarn.apply(console, args);
+      };
+      
+      console.error = function(...args) {
+        window.allLogs.push('[ERROR] ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' '));
+        originalError.apply(console, args);
+      };
+      
+      // Crear botón flotante
+      const btn = document.createElement('button');
+      btn.textContent = '📋 Copiar Logs';
+      btn.style.cssText = `
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 999999;
+        padding: 10px 15px;
+        background: #ff7a00;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      `;
+      
+      btn.onclick = async () => {
+        const logs = window.allLogs.join('\n');
+        try {
+          await navigator.clipboard.writeText(logs);
+          btn.textContent = '✅ Copiado!';
+          setTimeout(() => btn.textContent = '📋 Copiar Logs', 2000);
+        } catch (err) {
+          // Fallback para iOS
+          const textarea = document.createElement('textarea');
+          textarea.value = logs;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          btn.textContent = '✅ Copiado!';
+          setTimeout(() => btn.textContent = '📋 Copiar Logs', 2000);
+        }
+      };
+      
+      document.body.appendChild(btn);
+    });
+  </script>
 </head>
 
 <body>
