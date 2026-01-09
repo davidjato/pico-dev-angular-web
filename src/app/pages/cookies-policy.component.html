@@ -1,0 +1,43 @@
+<app-header></app-header>
+
+<div class="legal-page">
+    <main class="legal-content">
+        <h1>{{ 'COOKIES.TITLE' | translate }}</h1>
+        <p class="site-name">picollect.lu</p>
+
+        <section>
+            <p [innerHTML]="'COOKIES.INTRO' | translate"></p>
+        </section>
+
+        <section>
+            <p [innerHTML]="'COOKIES.WHAT_ARE' | translate"></p>
+        </section>
+
+        <section>
+            <p [innerHTML]="'COOKIES.INFO_COLLECTED' | translate"></p>
+        </section>
+
+        <section>
+            <p [innerHTML]="'COOKIES.PERSONAL_DATA' | translate"></p>
+        </section>
+
+        <section>
+            <h2>{{ 'COOKIES.THIRD_PARTY_TITLE' | translate }}</h2>
+            <p [innerHTML]="'COOKIES.THIRD_PARTY_DESC' | translate"></p>
+            <p [innerHTML]="'COOKIES.THIRD_PARTY_INFO' | translate"></p>
+            <p [innerHTML]="'COOKIES.THIRD_PARTY_MORE' | translate"></p>
+            <p>Google Analytics: <a href="https://developers.google.com/analytics/" target="_blank"
+                    rel="noopener">https://developers.google.com/analytics/</a></p>
+            <p [innerHTML]="'COOKIES.THIRD_PARTY_SHARING' | translate"></p>
+        </section>
+
+        <section>
+            <h2>{{ 'COOKIES.DISABLE_TITLE' | translate }}</h2>
+            <p [innerHTML]="'COOKIES.DISABLE_DESC' | translate"></p>
+        </section>
+
+        <footer class="legal-footer">
+            <p>{{ 'COOKIES.FOOTER' | translate }}</p>
+        </footer>
+    </main>
+</div>

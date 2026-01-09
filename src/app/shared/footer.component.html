@@ -9,13 +9,15 @@
     </nav>
 
     <div class="footer-center">
-      <a href="/privacy-policy" class="footer-privacy">{{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
+      <a routerLink="/cookies-policy" class="footer-privacy">{{ 'FOOTER.COOKIES_POLICY' | translate }}</a>
+      <span class="footer-separator">|</span>
+      <a routerLink="/data-privacy-policy" class="footer-privacy">{{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
     </div>
 
     <div class="footer-languages">
-      <button class="lang-btn active">EN</button>
-      <button class="lang-btn">FR</button>
-      <button class="lang-btn">ES</button>
+      <button class="lang-btn" [class.active]="currentLang === 'en'" (click)="changeLang('en')">EN</button>
+      <button class="lang-btn" [class.active]="currentLang === 'fr'" (click)="changeLang('fr')">FR</button>
+      <button class="lang-btn" [class.active]="currentLang === 'lb'" (click)="changeLang('lb')">LB</button>
     </div>
   </div>
 </footer>

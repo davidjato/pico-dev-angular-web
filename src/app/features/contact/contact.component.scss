@@ -168,6 +168,90 @@
   }
 }
 
+.privacy-checkbox {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #cccccc;
+  gap: 0.75rem;
+
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+
+    &:checked ~ .checkmark {
+      background-color: #FF7A00;
+      border-color: #FF7A00;
+
+      &::after {
+        display: block;
+      }
+    }
+
+    &:disabled ~ .checkmark {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .checkmark {
+    position: relative;
+    height: 20px;
+    width: 20px;
+    min-width: 20px;
+    background-color: transparent;
+    border: 2px solid #666666;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 5px;
+      top: 1px;
+      width: 6px;
+      height: 11px;
+      border: solid #000000;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  &:hover input[type="checkbox"]:not(:disabled) ~ .checkmark {
+    border-color: #FF7A00;
+  }
+
+  .checkbox-label {
+    line-height: 1.4;
+    text-align: left;
+
+    a {
+      color: #FF7A00;
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+
+      &:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
 .status-messages {
   margin-top: 1.5rem;
   min-height: 1.5rem;

@@ -1,0 +1,17 @@
+<div class="cookie-banner" *ngIf="showBanner()">
+    <div class="cookie-content">
+        <div class="cookie-text">
+            <h3 class="cookie-title">Made with care, including your data.</h3>
+            <p class="cookie-description">
+                Cookies help us understand what works and what doesn't, so we can build better experiences.
+            </p>
+            <p class="cookie-trust">
+                No tricks. No unnecessary tracking. You're always in control.
+            </p>
+        </div>
+        <div class="cookie-actions">
+            <button class="btn-accept" (click)="acceptAll()">Accept all</button>
+            <button class="btn-decline" (click)="declineNonEssential()">Decline non-essential</button>
+        </div>
+    </div>
+</div>

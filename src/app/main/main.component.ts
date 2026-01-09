@@ -7,6 +7,7 @@ import { AboutComponent } from '../features/about/about.component';
 import { WhyUsComponent } from '../features/why-us/why-us.component';
 import { ComingSoonComponent } from '../features/coming-soon/coming-soon.component';
 import { ContactComponent } from '../features/contact/contact.component';
+import { CookieBannerComponent } from '../shared/cookie-banner.component';
 import { GuiControlsService } from '../shared/gui-controls.service';
 
 @Component({
@@ -19,7 +20,8 @@ import { GuiControlsService } from '../shared/gui-controls.service';
     FooterComponent,
     ComingSoonComponent, AboutComponent,
     WhyUsComponent,
-    ContactComponent
+    ContactComponent,
+    CookieBannerComponent
   ],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']

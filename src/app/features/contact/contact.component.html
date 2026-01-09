@@ -41,6 +41,14 @@
       </button>
     </div>
 
+    <div class="privacy-checkbox">
+      <label class="checkbox-container">
+        <input type="checkbox" [(ngModel)]="privacyAccepted" [disabled]="isLoading">
+        <span class="checkmark"></span>
+        <span class="checkbox-label" [innerHTML]="'CONTACT.PRIVACY_CONSENT' | translate"></span>
+      </label>
+    </div>
+
     <div class="status-messages">
       @if (isSuccess) {
       <p class="success-message">

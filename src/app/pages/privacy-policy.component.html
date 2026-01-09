@@ -1,0 +1,143 @@
+<app-header></app-header>
+
+<div class="legal-page">
+    <main class="legal-content">
+        <h1>{{ 'PRIVACY.TITLE' | translate }}</h1>
+        <p class="last-updated">{{ 'PRIVACY.LAST_UPDATED' | translate }}: December 30, 2025</p>
+
+        <section>
+            <p [innerHTML]="'PRIVACY.INTRO' | translate"></p>
+        </section>
+
+        <section>
+            <h2>{{ 'PRIVACY.SUMMARY_TITLE' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.SUMMARY_INTRO' | translate"></p>
+
+            <div class="summary-points">
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q1' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A1' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q2' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A2' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q3' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A3' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q4' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A4' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q5' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A5' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q6' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A6' | translate"></p>
+                </div>
+                <div class="point">
+                    <strong>{{ 'PRIVACY.Q7' | translate }}</strong>
+                    <p [innerHTML]="'PRIVACY.A7' | translate"></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>{{ 'PRIVACY.TOC_TITLE' | translate }}</h2>
+            <ol class="toc">
+                <li><a href="#collect">{{ 'PRIVACY.TOC_1' | translate }}</a></li>
+                <li><a href="#process">{{ 'PRIVACY.TOC_2' | translate }}</a></li>
+                <li><a href="#legal">{{ 'PRIVACY.TOC_3' | translate }}</a></li>
+                <li><a href="#share">{{ 'PRIVACY.TOC_4' | translate }}</a></li>
+                <li><a href="#cookies">{{ 'PRIVACY.TOC_5' | translate }}</a></li>
+                <li><a href="#retain">{{ 'PRIVACY.TOC_6' | translate }}</a></li>
+                <li><a href="#safe">{{ 'PRIVACY.TOC_7' | translate }}</a></li>
+                <li><a href="#minors">{{ 'PRIVACY.TOC_8' | translate }}</a></li>
+                <li><a href="#rights">{{ 'PRIVACY.TOC_9' | translate }}</a></li>
+                <li><a href="#dnt">{{ 'PRIVACY.TOC_10' | translate }}</a></li>
+                <li><a href="#updates">{{ 'PRIVACY.TOC_11' | translate }}</a></li>
+                <li><a href="#contact">{{ 'PRIVACY.TOC_12' | translate }}</a></li>
+                <li><a href="#review">{{ 'PRIVACY.TOC_13' | translate }}</a></li>
+            </ol>
+        </section>
+
+        <section id="collect">
+            <h2>1. {{ 'PRIVACY.TOC_1' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.COLLECT_INTRO' | translate"></p>
+            <p [innerHTML]="'PRIVACY.COLLECT_PERSONAL' | translate"></p>
+            <ul>
+                <li [innerHTML]="'PRIVACY.COLLECT_NAMES' | translate"></li>
+                <li [innerHTML]="'PRIVACY.COLLECT_CONTACT' | translate"></li>
+            </ul>
+            <p [innerHTML]="'PRIVACY.COLLECT_SENSITIVE' | translate"></p>
+            <p [innerHTML]="'PRIVACY.COLLECT_PROVIDED' | translate"></p>
+        </section>
+
+        <section id="process">
+            <h2>2. {{ 'PRIVACY.TOC_2' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.PROCESS_INTRO' | translate"></p>
+        </section>
+
+        <section id="legal">
+            <h2>3. {{ 'PRIVACY.TOC_3' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.LEGAL_INTRO' | translate"></p>
+        </section>
+
+        <section id="share">
+            <h2>4. {{ 'PRIVACY.TOC_4' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.SHARE_INTRO' | translate"></p>
+        </section>
+
+        <section id="cookies">
+            <h2>5. {{ 'PRIVACY.TOC_5' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.COOKIES_INTRO' | translate"></p>
+            <p>{{ 'PRIVACY.COOKIES_GOOGLE' | translate }}</p>
+            <p>Google Analytics: <a href="https://developers.google.com/analytics/" target="_blank"
+                    rel="noopener">https://developers.google.com/analytics/</a></p>
+        </section>
+
+        <section id="retain">
+            <h2>6. {{ 'PRIVACY.TOC_6' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.RETAIN_INTRO' | translate"></p>
+        </section>
+
+        <section id="safe">
+            <h2>7. {{ 'PRIVACY.TOC_7' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.SAFE_INTRO' | translate"></p>
+        </section>
+
+        <section id="minors">
+            <h2>8. {{ 'PRIVACY.TOC_8' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.MINORS_INTRO' | translate"></p>
+        </section>
+
+        <section id="rights">
+            <h2>9. {{ 'PRIVACY.TOC_9' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.RIGHTS_INTRO' | translate"></p>
+        </section>
+
+        <section id="dnt">
+            <h2>10. {{ 'PRIVACY.TOC_10' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.DNT_INTRO' | translate"></p>
+        </section>
+
+        <section id=" updates">
+            <h2>11. {{ 'PRIVACY.TOC_11' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.UPDATES_INTRO' | translate"></p>
+        </section>
+
+        <section id="contact">
+            <h2>12. {{ 'PRIVACY.TOC_12' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.CONTACT_INTRO' | translate"></p>
+            <p>Email: <a href="mailto:contact@picollect.lu">contact@picollect.lu</a></p>
+        </section>
+
+        <section id="review">
+            <h2>13. {{ 'PRIVACY.TOC_13' | translate }}</h2>
+            <p [innerHTML]="'PRIVACY.REVIEW_INTRO' | translate"></p>
+        </section>
+    </main>
+</div>

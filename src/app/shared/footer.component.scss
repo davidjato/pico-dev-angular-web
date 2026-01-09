@@ -48,6 +48,15 @@
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-separator {
+  color: #666666;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  user-select: none;
 }
 
 .footer-privacy {

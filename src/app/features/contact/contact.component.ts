@@ -2,13 +2,14 @@ import { Component, inject, DestroyRef, ChangeDetectorRef, NgZone } from '@angul
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { NewsletterService } from '../../shared/newsletter.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'feature-contact',
   standalone: true,
-  imports: [TranslateModule, FormsModule, CommonModule],
+  imports: [TranslateModule, FormsModule, CommonModule, RouterModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
@@ -20,6 +21,7 @@ export class ContactComponent {
 
   email: string = '';
   selectedType: 'asistente' | 'promotor' | 'partner' = 'asistente';
+  privacyAccepted: boolean = false;
 
   isLoading: boolean = false;
   isSuccess: boolean = false;
@@ -27,6 +29,12 @@ export class ContactComponent {
   errorMessage: string = '';
 
   onSubmit() {
+    if (!this.privacyAccepted) {
+      this.isError = true;
+      this.errorMessage = 'Please accept the privacy policy';
+      return;
+    }
+    
     if (this.email && this.validateEmail(this.email)) {
       this.isLoading = true;
       this.isSuccess = false;
