@@ -26,7 +26,7 @@ export class ComingSoonCountdown3D {
     private ALL_DIGIT_GROUPS: THREE.Group[] = [];
     private paused = false;
     private DIGITS = 0;
-    private TARGET_DATE = new Date('2026-09-30T00:00:00+02:00');
+    private TARGET_DATE = new Date('2026-09-26T14:00:00+02:00');
     private orthoSize = 60;
     private reflectResolutionScale = 0.3;
     private currentReflectStrength = 0.08;

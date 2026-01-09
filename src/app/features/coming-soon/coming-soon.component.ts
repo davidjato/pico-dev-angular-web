@@ -43,11 +43,11 @@ export class ComingSoonComponent implements AfterViewInit, OnDestroy {
       const artistReveal = document.createElement('div');
       artistReveal.className = 'artist-reveal';
       artistReveal.style.cssText = 'position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); width: 100%; display: flex; justify-content: center; z-index: 10; pointer-events: none;';
-      artistReveal.innerHTML = `<span style="font-family: Inter, sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.04em; color: #fff; text-align: center; padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">${this.translate.instant('COMINGSOON_MARQUEE.ARTIST_REVEAL')}</span>`;
+      artistReveal.innerHTML = `<span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.04em; color: #fff; text-align: center; padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">${this.translate.instant('COMINGSOON_MARQUEE.ARTIST_REVEAL')}</span>`;
 
       // Actualizar traducciones cuando cambie el idioma
       this.translate.onLangChange.subscribe(() => {
-        artistReveal.innerHTML = `<span style="font-family: Inter, sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.04em; color: #fff; text-align: center; padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">${this.translate.instant('COMINGSOON_MARQUEE.ARTIST_REVEAL')}</span>`;
+        artistReveal.innerHTML = `<span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.04em; color: #fff; text-align: center; padding-bottom: 4px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">${this.translate.instant('COMINGSOON_MARQUEE.ARTIST_REVEAL')}</span>`;
       });
 
       // Ensamblar DOM

@@ -1,58 +1,22 @@
-@media (max-width: 768px) {
-  .hand-image {
-    position: absolute !important;
-    top: 0;
-
-    width: 120vw;
-    height: 40vh;
-    margin: 0 !important;
-    z-index: 1 !important;
-    opacity: 1;
-    pointer-events: none;
-  }
-
-  .left-hand {
-    left: -45vw;
-
-    right: auto;
-  }
-
-  .right-hand {
-    right: -45vw;
-    left: auto;
-  }
-
-  .contact-content {
-    position: relative;
-    z-index: 2 !important;
-    margin: 0 10vw;
-
-    .contact-title {
-      font-size: 1.5rem;
-    }
-
-    .contact-subtitle {
-      display: none;
-    }
-  }
-}
-
 .contact-section {
   width: 100%;
   min-height: 100vh;
   background: #000000;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
+  padding: 4rem 0;
 }
 
+// Las manos siempre en position absolute
 .hand-image {
+  position: absolute;
   width: auto;
   height: 80vh;
-  flex-shrink: 0;
-  position: relative;
+  pointer-events: none;
+  z-index: 1;
 
   img {
     width: 100%;
@@ -63,19 +27,25 @@
 }
 
 .left-hand {
-  margin-left: 0%;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .right-hand {
-  margin-right: 0%;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .contact-content {
-  flex: 1;
-  max-width: 800px;
-  text-align: center;
-  padding: 0 4rem;
+  position: relative;
   z-index: 10;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  padding: 0 2rem;
+  margin: 0 auto;
 }
 
 .contact-title {
@@ -232,34 +202,89 @@
 }
 
 // Responsive
+@media (max-width: 1400px) {
+  .hand-image {
+    height: 70vh;
+  }
+
+  .left-hand {
+    left: -5%;
+  }
+
+  .right-hand {
+    right: -5%;
+  }
+
+  .contact-content {
+    max-width: 700px;
+  }
+}
+
 @media (max-width: 1200px) {
   .hand-image {
     height: 60vh;
   }
 
+  .left-hand {
+    left: -10%;
+  }
+
+  .right-hand {
+    right: -10%;
+  }
+
   .contact-title {
     font-size: 2.5rem;
+  }
+
+  .contact-content {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hand-image {
+    height: 50vh;
+  }
+
+  .left-hand {
+    left: -20%;
+  }
+
+  .right-hand {
+    right: -20%;
+  }
+
+  .contact-content {
+    max-width: 500px;
+  }
+
+  .contact-title {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 768px) {
   .contact-section {
-    flex-direction: column;
-    padding: 2rem 0rem;
-    min-height: unset !important;
+    padding: 3rem 0;
+    min-height: auto;
+    height: auto;
   }
 
   .hand-image {
-    height: 40vh;
-    margin: 1rem 0 !important;
+    display: none;
   }
 
   .contact-content {
-    padding: 2rem 0rem;
+    max-width: 100%;
   }
 
   .contact-title {
     font-size: 1.8rem;
+  }
+
+  .contact-subtitle {
+    font-size: 0.85rem;
   }
 
   .type-selector {
@@ -276,17 +301,27 @@
   .email-form {
     flex-direction: column;
     background-color: #000000;
-    position: relative;
-
   }
 
   .submit-button {
     width: 100%;
-
   }
 
   .email-input {
-
     width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-title {
+    font-size: 1.5rem;
+  }
+
+  .contact-subtitle {
+    display: none;
+  }
+
+  .contact-content {
+    padding: 0 1rem;
   }
 }
