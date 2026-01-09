@@ -11,11 +11,13 @@
             <button class="burger" (click)="toggleMenu()" aria-label="Abrir menú" aria-expanded="menuOpen">
                 <span></span><span></span><span></span>
             </button>
-            
+
             <!-- Menú para páginas legales -->
             <ul class="nav-links legal-nav" *ngIf="isLegalPage" [class.open]="menuOpen">
-                <li><a routerLink="/cookies-policy" routerLinkActive="active" (click)="closeMenu()">{{ 'LEGAL.COOKIES_POLICY' | translate }}</a></li>
-                <li><a routerLink="/data-privacy-policy" routerLinkActive="active" (click)="closeMenu()">{{ 'LEGAL.PRIVACY_POLICY' | translate }}</a></li>
+                <li><a routerLink="/cookies-policy" routerLinkActive="active" (click)="closeMenu()">{{
+                        'LEGAL.COOKIES_POLICY' | translate }}</a></li>
+                <li><a routerLink="/data-privacy-policy" routerLinkActive="active" (click)="closeMenu()">{{
+                        'LEGAL.PRIVACY_POLICY' | translate }}</a></li>
                 <li class="lang-mobile" *ngIf="menuOpen">
                     <div class="lang-switcher">
                         <button type="button" [class.active]="currentLang === 'en'"
@@ -27,7 +29,7 @@
                     </div>
                 </li>
             </ul>
-            
+
             <!-- Menú para página principal -->
             <ul class="nav-links" *ngIf="!isLegalPage" [class.open]="menuOpen">
                 <li><a (click)="scrollToSection('home'); closeMenu()" [class.active]="activeSection === 'home'">{{
@@ -49,7 +51,7 @@
                     </div>
                 </li>
             </ul>
-            
+
             <span class="divider"></span>
             <div class="lang-switcher desktop-lang">
                 <button type="button" [class.active]="currentLang === 'en'" (click)="changeLang('en')">EN</button>

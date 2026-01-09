@@ -192,7 +192,7 @@
     height: 0;
     width: 0;
 
-    &:checked ~ .checkmark {
+    &:checked~.checkmark {
       background-color: #FF7A00;
       border-color: #FF7A00;
 
@@ -201,7 +201,7 @@
       }
     }
 
-    &:disabled ~ .checkmark {
+    &:disabled~.checkmark {
       opacity: 0.5;
       cursor: not-allowed;
     }
@@ -231,7 +231,7 @@
     }
   }
 
-  &:hover input[type="checkbox"]:not(:disabled) ~ .checkmark {
+  &:hover input[type="checkbox"]:not(:disabled)~.checkmark {
     border-color: #FF7A00;
   }
 

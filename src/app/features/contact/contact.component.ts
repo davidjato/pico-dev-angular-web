@@ -34,7 +34,7 @@ export class ContactComponent {
       this.errorMessage = 'Please accept the privacy policy';
       return;
     }
-    
+
     if (this.email && this.validateEmail(this.email)) {
       this.isLoading = true;
       this.isSuccess = false;

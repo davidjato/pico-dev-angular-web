@@ -7,8 +7,8 @@
         (mouseleave)="onPointHover(false)">
         <div class="point-number">P0.{{ point }}</div>
         <div class="point-content">
-          <h3 class="point-title">{{ ('WHY_US.POINT_' + point + '.TITLE') | translate }}</h3>
-          <p class="point-description">{{ ('WHY_US.POINT_' + point + '.DESCRIPTION') | translate }}</p>
+          <h3 class="point-title" [innerHTML]="('WHY_US.POINT_' + point + '.TITLE') | translate"></h3>
+          <p class="point-description" [innerHTML]="('WHY_US.POINT_' + point + '.DESCRIPTION') | translate"></p>
         </div>
       </div>
     </div>

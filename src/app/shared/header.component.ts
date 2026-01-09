@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     constructor() {
         // Establecer inglés por defecto al iniciar
         this.translate.use('en');
-        
+
         // Detectar inmediatamente en el constructor si estamos en página legal
         if (this.isBrowser) {
             const url = this.router.url;
@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         const url = this.router.url;
         const wasLegalPage = this.isLegalPage;
         this.isLegalPage = url.includes('/cookies-policy') || url.includes('/data-privacy-policy');
-        
+
         if (wasLegalPage !== this.isLegalPage) {
             this.cdr.detectChanges();
         }
