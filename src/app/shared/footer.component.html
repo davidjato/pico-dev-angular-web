@@ -2,10 +2,10 @@
   <div class="footer-top-line"></div>
   <div class="footer-content">
     <nav class="footer-nav">
-      <a href="#home" class="footer-link">{{ 'FOOTER.NAV_HOME' | translate }}</a>
-      <a href="#who" class="footer-link">{{ 'FOOTER.NAV_WHY' | translate }}</a>
-      <a href="#where" class="footer-link">{{ 'FOOTER.NAV_CORE' | translate }}</a>
-      <a href="#collab" class="footer-link">{{ 'FOOTER.NAV_JOIN' | translate }}</a>
+      <a (click)="scrollToSection('home')" class="footer-link">{{ 'FOOTER.NAV_HOME' | translate }}</a>
+      <a (click)="scrollToSection('about')" class="footer-link">{{ 'FOOTER.NAV_WHY' | translate }}</a>
+      <a (click)="scrollToSection('why-us')" class="footer-link">{{ 'FOOTER.NAV_CORE' | translate }}</a>
+      <a (click)="scrollToSection('contact')" class="footer-link">{{ 'FOOTER.NAV_JOIN' | translate }}</a>
     </nav>
 
     <div class="footer-center">

@@ -20,4 +20,11 @@ export class FooterComponent {
   changeLang(lang: string): void {
     this.translate.use(lang);
   }
+
+  scrollToSection(sectionId: string): void {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }

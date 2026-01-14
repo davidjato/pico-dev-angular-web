@@ -101,11 +101,17 @@
     z-index: 1000;
     background: #000;
     font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s ease;
 }
 
 @media (max-width: 900px) {
     .main-header {
-        background: rgba(0, 0, 0, 0.1) !important;
+        background: rgba(0, 0, 0, 0.1);
+    }
+
+    .main-header.scrolled {
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
     }
 }
 

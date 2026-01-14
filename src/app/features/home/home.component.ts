@@ -29,6 +29,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
   }
 
+  scrollToContact(): void {
+    if (!this.isBrowser) return;
+    
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   ngOnDestroy(): void {
   }
 }

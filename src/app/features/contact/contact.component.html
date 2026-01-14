@@ -1,4 +1,4 @@
-<section id="where" class="contact-section">
+<section id="contact" class="contact-section">
   <div class="hand-image left-hand">
     <img src="assets/images/left hand.jpg" alt="Left hand holding light">
   </div>
@@ -19,9 +19,6 @@
     <div class="type-selector">
       <button class="type-button" [class.active]="selectedType === 'asistente'" (click)="selectedType = 'asistente'">
         {{ 'CONTACT.TYPE_ATTENDEE' | translate }}
-      </button>
-      <button class="type-button" [class.active]="selectedType === 'promotor'" (click)="selectedType = 'promotor'">
-        {{ 'CONTACT.TYPE_PROMOTER' | translate }}
       </button>
       <button class="type-button" [class.active]="selectedType === 'partner'" (click)="selectedType = 'partner'">
         {{ 'CONTACT.TYPE_PARTNER' | translate }}

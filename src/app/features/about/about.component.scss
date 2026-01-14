@@ -153,12 +153,27 @@ $bp-mobile: 900px;
       padding-left: 0;
       max-height: 80vh;
       overflow-y: auto;
+      display: flex;
+      align-items: flex-start;
     }
 
     .about-content-text {
       font-size: clamp(18px, 2vw, 28px);
       max-width: 48ch;
-      margin-top: 0.4rem;
+      margin: 0;
+      padding: 0;
+
+      ::ng-deep p {
+        margin: 0 0 1rem 0;
+
+        &:first-child {
+          margin-top: 0 !important;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
     }
 
     /* Desktop: carrusel fuera */
@@ -287,3 +302,4 @@ $bp-mobile: 900px;
 // .feature-section * {
 //   color: magenta !important;
 // }
+

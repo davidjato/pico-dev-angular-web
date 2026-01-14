@@ -7,7 +7,7 @@
     "TITLE": "Home",
     "DESCRIPTION": "Bienvenue dans la section d'accueil.",
     "INTRO_TITLE": "Une nouvelle façon de célébrer Luxembourg",
-    "INTRO_SUBTITLE": "Où la musique crée la connexion, avec sens et attention.",
+    "INTRO_SUBTITLE": "Où la musique rassemble les gens avec intention et soin.",
     "CTA_BUTTON": "Lët'z Picollect"
   },
   "ABOUT": {
@@ -19,10 +19,10 @@
       "MANIFIESTO": "MANIFESTE"
     },
     "TEXT": {
-      "CONCEPT": "<p>Picollect est un mouvement culturel qui relie la musique et la célébration pour créer une connexion avec un objectif clair.</p><p>Né dans une ville qui avance vite, nous créons des espaces conscients où la santé mentale est ouvertement acceptée comme une réalité humaine, pas comme une tendance ou une campagne.</p><p>À travers des expériences musicales, nous promouvons la présence, la communauté et l'énergie partagée, faisant de la célébration quelque chose de significatif.</p><p>Picollect redéfinit comment nous célébrons.<br>Avec sens. Avec les gens. Avec attention.</p>",
-      "MISSION": "<p>Notre mission est de créer une connexion à travers une célébration significative.</p><p>Nous développons des expériences musicales qui encouragent la présence, l'ouverture et la connexion honnête.</p><p>La santé mentale est au cœur de tout ce que nous faisons, par la visibilité, les actions concrètes et l'engagement à long terme.</p>",
-      "VISION": "<p>Nous imaginons une culture où la célébration crée un impact.</p><p>Où les événements ne sont pas définis par leur taille, mais par ce qu'ils déclenchent.</p><p>Où la musique crée la conscience, la communauté crée la cohésion, et le sens devient partie de la vie nocturne.</p><p>Notre vision est de développer Picollect comme une plateforme qui connecte artistes, communautés et santé mentale, au Luxembourg et au-delà.</p>",
-      "MANIFIESTO": "<p>Nous croyons que la célébration est une responsabilité.<br>Nous croyons que la musique est un langage universel.</p><p>Nous croyons que la santé mentale mérite soin, accès et visibilité, et que la joie et la conscience peuvent coexister.</p><p>Picollect n'est pas juste quelque chose à laquelle vous participez.<br>C'est quelque chose que vous défendez.</p>"
+      "CONCEPT": "<p>Picollect est un mouvement culturel qui utilise la musique et la célébration pour rassembler les gens avec intention.</p><p>Né dans une ville qui avance vite, Picollect crée des espaces intentionnels où la santé mentale est ouvertement reconnue comme une réalité humaine, pas une tendance ou une campagne.</p><p>À travers des expériences portées par la musique, nous encourageons la présence, la communauté et l'énergie partagée, transformant la célébration en quelque chose de significatif et inclusif.</p><p>Picollect redéfinit comment nous célébrons : avec intention, avec les gens, et avec soin.</p>",
+      "MISSION": "<p>Notre mission est de rassembler les gens à travers une célébration significative.</p><p>Nous créons des expériences portées par la musique qui encouragent la présence, l'ouverture et la connexion authentique.</p><p>La santé mentale se trouve au cœur de tout ce que nous faisons, par la visibilité, l'action directe et l'engagement à long terme.</p>",
+      "VISION": "<p>Nous imaginons une culture où la célébration crée de l'impact.</p><p>Où les événements ne sont pas définis par leur taille, mais par ce qu'ils font ressentir aux gens. Où la musique sensibilise, où la communauté crée l'appartenance, et où l'intention fait partie de la vie nocturne.</p><p>Notre vision est de faire grandir Picollect en une plateforme qui connecte artistes, communautés et santé mentale. Redéfinir comment nous célébrons au Luxembourg et au-delà.</p>",
+      "MANIFIESTO": "<p>Nous croyons que la célébration est une responsabilité. Nous croyons que la musique est un langage universel.</p><p>Nous croyons que la santé mentale mérite soin, accès et visibilité, et que la joie et la conscience peuvent coexister.</p><p>Picollect n'est pas juste quelque chose à laquelle vous assistez. C'est quelque chose que vous défendez.</p>"
     },
     "DESCRIPTION": "Ceci est la section à propos."
   },
@@ -46,19 +46,19 @@
     "SECTION_TITLE": "PILIERS",
     "POINT_1": {
       "TITLE": "Santé Mentale",
-      "DESCRIPTION": "Le bien-être émotionnel est au centre de la célébration. Nous créons des espaces sûrs et ouverts où la santé mentale est reconnue, respectée et soutenue comme une responsabilité partagée."
+      "DESCRIPTION": "Placer le bien-être émotionnel au centre de la célébration. Créer des espaces sûrs et ouverts où la santé mentale est reconnue, respectée et soutenue, non comme une déclaration, mais comme une responsabilité partagée."
     },
     "POINT_2": {
       "TITLE": "Célébrer",
-      "DESCRIPTION": "Musique, mouvement et énergie partagée, conçus pour être vibrants, présents et profondément humains."
+      "DESCRIPTION": "Musique, mouvement et énergie partagée conçus pour se sentir vivant, présent et profondément humain."
     },
     "POINT_3": {
       "TITLE": "Communauté",
-      "DESCRIPTION": "Construit avec les gens, pas pour les masses. Chacun joue un rôle, et la cohésion prime sur la taille."
+      "DESCRIPTION": "Construit avec les gens, pas pour les foules. Chacun joue un rôle, et l'appartenance passe avant la taille."
     },
     "POINT_4": {
       "TITLE": "Impact",
-      "DESCRIPTION": "Nous transformons la célébration en action. Au moins 10% de nos bénéfices nets soutiennent des ONG locales dans le secteur de la santé mentale.<br><br>Grâce au Programme 3.14, chaque événement offre un accès gratuit à la thérapie. Trois personnes reçoivent un an d'accompagnement, et quatorze personnes reçoivent un mois de thérapie.<br><br>Au total, près de 200 heures de soins sont offertes."
+      "DESCRIPTION": "Nous transformons la célébration en action. Au moins 10% de nos bénéfices nets soutiennent des ONG locales de santé mentale.<br><br>Grâce au Programme 3.14, chaque événement offre un accès gratuit à la thérapie. Trois personnes reçoivent un an complet de soutien, et quatorze reçoivent un mois de thérapie.<br><br>Au total, près de 200 heures de soins sont offertes."
     }
   },
   "COMINGSOON": {
@@ -68,12 +68,12 @@
     "RESUME": "Reprendre"
   },
   "CONTACT": {
-    "TITLE": "Participez",
+    "TITLE": "Rejoignez",
     "DESCRIPTION": "Contactez-nous.",
-    "HEADING_PART1": "DEVENEZ PARTIE DE NOTRE",
+    "HEADING_PART1": "REJOIGNEZ NOTRE",
     "HEADING_HIGHLIGHT1": "HISTOIRE",
-    "HEADING_PART2": "CONSTRUISEZ CE",
-    "HEADING_HIGHLIGHT2": "MOUVEMENT ENSEMBLE",
+    "HEADING_PART2": "CO-CRÉEZ CE",
+    "HEADING_HIGHLIGHT2": "MOUVEMENT",
     "SUBTITLE_PART1": "PARCE QUE LA",
     "SUBTITLE_HIGHLIGHT": "CULTURE",
     "SUBTITLE_PART2": "SE CONSTRUIT ENSEMBLE",
@@ -89,13 +89,13 @@
     "NAV_HOME": "Home",
     "NAV_WHY": "Pourquoi",
     "NAV_CORE": "Piliers",
-    "NAV_JOIN": "PARTICIPEZ"
+    "NAV_JOIN": "Rejoignez"
   },
   "FOOTER": {
     "NAV_HOME": "Home",
     "NAV_WHY": "Pourquoi",
     "NAV_CORE": "Piliers",
-    "NAV_JOIN": "Participez",
+    "NAV_JOIN": "Rejoignez",
     "COOKIES_POLICY": "Politique des Cookies",
     "PRIVACY_POLICY": "Politique de confidentialité"
   },

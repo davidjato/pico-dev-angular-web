@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     menuOpen = false;
     activeSection = 'home';
     isLegalPage = false;
+    isScrolled = false;
 
     constructor() {
         // Establecer inglés por defecto al iniciar
@@ -70,7 +71,14 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         // Solo ejecutar en browser
         if (!this.isBrowser) return;
 
-        const sections = ['home', 'about', 'why-us', 'coming-soon'];
+        // Detectar si se ha hecho scroll
+        const scrolled = window.scrollY > 50;
+        if (this.isScrolled !== scrolled) {
+            this.isScrolled = scrolled;
+            this.cdr.markForCheck();
+        }
+
+        const sections = ['home', 'about', 'why-us', 'contact'];
         const scrollPosition = window.scrollY + 100; // Offset para activar antes
 
         for (const sectionId of sections) {

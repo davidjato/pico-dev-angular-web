@@ -6,8 +6,8 @@
   "HOME": {
     "TITLE": "Home",
     "DESCRIPTION": "Welcome to the home section.",
-    "INTRO_TITLE": "A new way to celebrate ",
-    "INTRO_SUBTITLE": "Where music creates connection, with purpose and attention.",
+    "INTRO_TITLE": "A new way to celebrate Luxembourg",
+    "INTRO_SUBTITLE": "Where music brings people together with purpose and care.",
     "CTA_BUTTON": "Lët'z Picollect"
   },
   "ABOUT": {
@@ -19,10 +19,10 @@
       "MANIFIESTO": "MANIFEST"
     },
     "TEXT": {
-      "CONCEPT": "<p>Picollect is a cultural movement that connects music and celebration to create connection with clear purpose.</p><p>Born in a city that moves fast, we create conscious spaces where mental health is openly accepted as a human reality, not as a trend or campaign.</p><p>Through music-based experiences, we promote presence, community and shared energy, making celebration something meaningful.</p><p>Picollect redefines how we celebrate.<br>With purpose. With people. With attention.</p>",
-      "MISSION": "<p>Our mission is to create connection through meaningful celebration.</p><p>We develop music-based experiences that promote presence, openness and honest connection.</p><p>Mental health is at the core of everything we do, through visibility, concrete actions and long-term commitment.</p>",
-      "VISION": "<p>We envision a culture where celebration creates impact.</p><p>Where events are not defined by their size, but by what they trigger.</p><p>Where music creates consciousness, community creates cohesion, and purpose becomes part of nightlife.</p><p>Our vision is to develop Picollect as a platform that connects artists, communities and mental health, in Luxembourg and beyond.</p>",
-      "MANIFIESTO": "<p>We believe that celebration is a responsibility.<br>We believe that music is a universal language.</p><p>We believe that mental health deserves care, access and visibility, and that joy and consciousness can coexist.</p><p>Picollect is not just something you participate in.<br>It's something you stand for.</p>"
+      "CONCEPT": "<p>Picollect is a cultural movement that uses music and celebration to bring people together with purpose.</p><p>Born in a fast-moving city, Picollect creates intentional spaces where mental health is openly acknowledged as a human reality, not a trend or a campaign.</p><p>Through music-driven experiences, we encourage presence, community, and shared energy, turning celebration into something meaningful and inclusive.</p><p>Picollect redefines how we celebrate: with purpose, with people, and with care.</p>",
+      "MISSION": "<p>Our mission is to bring people together through meaningful celebration.</p><p>We design music-driven experiences that encourage presence, openness, and genuine connection.</p><p>Mental health sits at the core of everything we do through visibility, direct action, and long-term commitment.</p>",
+      "VISION": "<p>We imagine a culture where celebration creates impact.</p><p>Where events are not defined by their scale, but by how they make people feel. Where music raises awareness, community creates belonging, and purpose becomes part of nightlife.</p><p>Our vision is to grow Picollect into a platform that connects artists, communities, and mental health. Redefining how we celebrate in Luxembourg and beyond.</p>",
+      "MANIFIESTO": "<p>We believe celebration is a responsibility. We believe music is a universal language.</p><p>We believe mental health deserves care, access, and visibility and that joy and awareness can coexist.</p><p>Picollect is not just something you attend. It's something you stand for.</p>"
     },
     "DESCRIPTION": "This is the about section."
   },
@@ -46,19 +46,19 @@
     "SECTION_TITLE": "PILLARS",
     "POINT_1": {
       "TITLE": "Mental Health",
-      "DESCRIPTION": "Emotional well-being is at the center of celebration. We create safe and open spaces where mental health is recognized, respected and supported as a shared responsibility."
+      "DESCRIPTION": "Placing emotional well-being at the center of celebration. Creating safe, open spaces where mental health is acknowledged, respected, and supported, not as a statement, but as a shared responsibility."
     },
     "POINT_2": {
       "TITLE": "Celebrate",
-      "DESCRIPTION": "Music, movement and shared energy, designed to be vibrant, present and deeply human."
+      "DESCRIPTION": "Music, movement, and shared energy designed to feel alive, present, and deeply human."
     },
     "POINT_3": {
       "TITLE": "Community",
-      "DESCRIPTION": "Built with people, not for masses. Everyone plays a role, and cohesion comes before size."
+      "DESCRIPTION": "Built with people, not for crowds. Everyone plays a role, and belonging comes before scale."
     },
     "POINT_4": {
       "TITLE": "Impact",
-      "DESCRIPTION": "We turn celebration into action. At least 10% of our net profits support local NGOs in the mental health sector.<br><br>Through the 3.14 Program, each event provides free access to therapy. Three people receive one year of support, and fourteen people receive one month of therapy.<br><br>In total, nearly 200 hours of care are offered."
+      "DESCRIPTION": "We turn celebration into action. At least 10% of our net profits support local mental health NGOs.<br><br>Through Program 3.14, each event provides free access to therapy. Three people receive a full year of support, and fourteen receive one month of therapy.<br><br>In total, nearly 200 hours of care are offered."
     }
   },
   "COMINGSOON": {
@@ -68,12 +68,12 @@
     "RESUME": "Resume"
   },
   "CONTACT": {
-    "TITLE": "Participate",
+    "TITLE": "Join",
     "DESCRIPTION": "Get in touch with us.",
-    "HEADING_PART1": "BECOME PART OF OUR",
+    "HEADING_PART1": "JOIN OUR",
     "HEADING_HIGHLIGHT1": "STORY",
-    "HEADING_PART2": "BUILD THIS",
-    "HEADING_HIGHLIGHT2": "MOVEMENT TOGETHER",
+    "HEADING_PART2": "CO-CREATE THIS",
+    "HEADING_HIGHLIGHT2": "MOVEMENT",
     "SUBTITLE_PART1": "BECAUSE",
     "SUBTITLE_HIGHLIGHT": "CULTURE",
     "SUBTITLE_PART2": "IS BUILT TOGETHER",
@@ -89,13 +89,13 @@
     "NAV_HOME": "Home",
     "NAV_WHY": "Why",
     "NAV_CORE": "Pillars",
-    "NAV_JOIN": "PARTICIPATE"
+    "NAV_JOIN": "Join"
   },
   "FOOTER": {
     "NAV_HOME": "Home",
     "NAV_WHY": "Why",
     "NAV_CORE": "Pillars",
-    "NAV_JOIN": "Participate",
+    "NAV_JOIN": "Join",
     "COOKIES_POLICY": "Cookies Policy",
     "PRIVACY_POLICY": "Privacy Policy"
   },
