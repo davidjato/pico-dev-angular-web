@@ -27,13 +27,13 @@
 }
 
 .left-hand {
-  left: 0;
+  left: -10%;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .right-hand {
-  right: 0;
+  right: -10%;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -356,11 +356,21 @@
   }
 
   .hand-image {
-    display: none;
+    height: 60vh;
+    opacity: 0.3;
+  }
+
+  .left-hand {
+    left: -45%;
+  }
+
+  .right-hand {
+    right: -45%;
   }
 
   .contact-content {
     max-width: 100%;
+    padding: 0 3rem;
   }
 
   .contact-title {
@@ -406,6 +416,6 @@
   }
 
   .contact-content {
-    padding: 0 1rem;
+    padding: 0 2.5rem;
   }
 }
